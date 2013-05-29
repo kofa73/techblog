@@ -24,57 +24,57 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ LoggerFactory.class })
 public class AuthenticationServiceTest1 {
 
-	private Logger logger;
+    private Logger logger;
 
-	private AuthenticationService service = new AuthenticationService();
+    private AuthenticationService service = new AuthenticationService();
 
-	private static final String USER = "user";
-	private static final String DUMMY_PASSWORD = "";
+    private static final String USER = "user";
+    private static final String DUMMY_PASSWORD = "";
 
-	@Before
-	public void setUp() throws Exception {
-		logger = mock(Logger.class);
-		PowerMockito.spy(LoggerFactory.class);
-		PowerMockito.doReturn(logger).when(LoggerFactory.class, "getLogger",
-				AuthenticationService.class);
-	}
+    @Before
+    public void setUp() throws Exception {
+        logger = mock(Logger.class);
+        PowerMockito.spy(LoggerFactory.class);
+        PowerMockito.doReturn(logger).when(LoggerFactory.class, "getLogger",
+                AuthenticationService.class);
+    }
 
-	@Test
-	public void testSuccessEvenIfFirstFailed() {
-		AuthenticationResult result = authenticateWith(FAILED, SUCCESSFUL);
+    @Test
+    public void testSuccessEvenIfFirstFailed() {
+        AuthenticationResult result = authenticateWith(FAILED, SUCCESSFUL);
 
-		assertThat(result, is(SUCCESSFUL));
-		assertLogContains(USER, SUCCESSFUL);
-	}
+        assertThat(result, is(SUCCESSFUL));
+        assertLogContains(USER, SUCCESSFUL);
+    }
 
-	private AuthenticationResult authenticateWith(
-			AuthenticationResult... results) {
-		List<AuthenticationProvider> providers = new ArrayList<AuthenticationProvider>();
-		for (AuthenticationResult result:results) {
-			AuthenticationProvider provider = mock(AuthenticationProvider.class);
-			when(provider.authenticate(anyString(), anyString())).thenReturn(result);
-			providers.add(provider);
-		}
-		service.setProviders(providers);
+    private AuthenticationResult authenticateWith(
+            AuthenticationResult... results) {
+        List<AuthenticationProvider> providers = new ArrayList<AuthenticationProvider>();
+        for (AuthenticationResult result : results) {
+            AuthenticationProvider provider = mock(AuthenticationProvider.class);
+            when(provider.authenticate(anyString(), anyString())).thenReturn(
+                    result);
+            providers.add(provider);
+        }
+        service.setProviders(providers);
 
-		return service.authenticate(USER, DUMMY_PASSWORD);
-	}
+        return service.authenticate(USER, DUMMY_PASSWORD);
+    }
 
-	private void assertLogContains(String user, AuthenticationResult result) {
-		ArgumentCaptor<Object> param1Captor = ArgumentCaptor
-				.forClass(Object.class);
-		ArgumentCaptor<Object> param2Captor = ArgumentCaptor
-				.forClass(Object.class);
-		verify(logger).info(anyString(), param1Captor.capture(),
-				param2Captor.capture());
-		List<Object> logParams = Arrays.asList(param1Captor.getValue(),
-				param2Captor.getValue());
-		assertTrue(logParams.contains(user));
-		assertTrue(logParams.contains(result));
-	}
+    private void assertLogContains(String user, AuthenticationResult result) {
+        ArgumentCaptor<Object> param1Captor = ArgumentCaptor
+                .forClass(Object.class);
+        ArgumentCaptor<Object> param2Captor = ArgumentCaptor
+                .forClass(Object.class);
+        verify(logger).info(anyString(), param1Captor.capture(),
+                param2Captor.capture());
+        List<Object> logParams = Arrays.asList(param1Captor.getValue(),
+                param2Captor.getValue());
+        assertTrue(logParams.contains(user));
+        assertTrue(logParams.contains(result));
+    }
 }
