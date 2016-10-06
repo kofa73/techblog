@@ -1,0 +1,633 @@
+$ java -jar target/benchmarks.jar arrayList -wi 5 -i 5 -f 1 -prof perfasm >>arrayList.log 2>&1
+# JMH 1.12 (released 188 days ago, please consider updating!)
+# VM version: JDK 1.8.0_101, VM 25.101-b13
+# VM invoker: /usr/lib/jvm/java-8-oracle/jre/bin/java
+# VM options: <none>
+# Warmup: 5 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.sample.lists.Lists.arrayList
+
+# Run progress: 0.00% complete, ETA 00:00:20
+# Fork: 1 of 1
+# Preparing profilers: LinuxPerfAsmProfiler 
+# Profilers consume stdout and stderr from target VM, use -v EXTRA to copy to console
+# Warmup Iteration   1: 13.232 ns/op
+# Warmup Iteration   2: 12.408 ns/op
+# Warmup Iteration   3: 12.036 ns/op
+# Warmup Iteration   4: 12.008 ns/op
+# Warmup Iteration   5: 12.225 ns/op
+Iteration   1: 12.254 ns/op
+Iteration   2: 12.094 ns/op
+Iteration   3: 12.016 ns/op
+Iteration   4: 12.067 ns/op
+Iteration   5: 12.104 ns/op
+# Processing profiler results: LinuxPerfAsmProfiler 
+
+
+Result "arrayList":
+  12.107 ±(99.9%) 0.343 ns/op [Average]
+  (min, avg, max) = (12.016, 12.107, 12.254), stdev = 0.089
+  CI (99.9%): [11.764, 12.450] (assumes normal distribution)
+
+Secondary result "·asm":
+PrintAssembly processed: 110991 total address lines.
+Perf output processed (skipped 5.295 seconds):
+ Column 1: cycles (8076 events)
+ Column 2: instructions (8012 events)
+
+Hottest code regions (>10.00% "cycles" events):
+....[Hottest Region 1]..............................................................................
+ [0x7f48d8b83932:0x7f48d8b83a07] in org.sample.lists.Lists::arrayList
+
+                                                                     ; - org.sample.lists.Lists::arrayList@11 (line 47)
+                       0x00007f48d8b83932: cmp    %r8d,%r9d
+                  ╭    0x00007f48d8b83935: je     0x00007f48d8b839df  ;*if_icmpeq
+                  │                                                  ; - java.util.ArrayList$Itr::hasNext@11 (line 846)
+                  │                                                  ; - org.sample.lists.Lists::arrayList@11 (line 47)
+                  │    0x00007f48d8b8393b: mov    0x8(%rsp),%r11
+                  │    0x00007f48d8b83940: test   %r11,%r11
+                  │    0x00007f48d8b83943: je     0x00007f48d8b83a79
+                  │    0x00007f48d8b83949: nopl   0x0(%rax)          ;*aload_2
+                  │                                                  ; - org.sample.lists.Lists::arrayList@19 (line 47)
+  3.58%    4.07%  │ ↗  0x00007f48d8b83950: mov    0xc(%r10),%r8d     ;*getfield modCount
+                  │ │                                                ; - java.util.ArrayList$Itr::checkForComodification@4 (line 900)
+                  │ │                                                ; - java.util.ArrayList$Itr::next@1 (line 851)
+                  │ │                                                ; - org.sample.lists.Lists::arrayList@20 (line 47)
+                  │ │                                                ; implicit exception: dispatches to 0x00007f48d8b83aa5
+  1.00%    1.19%  │ │  0x00007f48d8b83954: mov    0x10(%rsp),%r11
+                  │ │  0x00007f48d8b83959: mov    0x14(%r11),%ebp    ;*getfield expectedModCount
+                  │ │                                                ; - java.util.ArrayList$Itr::checkForComodification@8 (line 900)
+                  │ │                                                ; - java.util.ArrayList$Itr::next@1 (line 851)
+                  │ │                                                ; - org.sample.lists.Lists::arrayList@20 (line 47)
+  0.10%    0.14%  │ │  0x00007f48d8b8395d: cmp    %ebp,%r8d
+  3.44%    3.54%  │ │  0x00007f48d8b83960: jne    0x00007f48d8b83a11  ;*if_icmpeq
+                  │ │                                                ; - java.util.ArrayList$Itr::checkForComodification@11 (line 900)
+                  │ │                                                ; - java.util.ArrayList$Itr::next@1 (line 851)
+                  │ │                                                ; - org.sample.lists.Lists::arrayList@20 (line 47)
+  0.87%    0.91%  │ │  0x00007f48d8b83966: mov    0x10(%r10),%ebp    ;*getfield size
+                  │ │                                                ; - java.util.ArrayList::access$100@1 (line 106)
+                  │ │                                                ; - java.util.ArrayList$Itr::next@14 (line 853)
+                  │ │                                                ; - org.sample.lists.Lists::arrayList@20 (line 47)
+  0.95%    0.64%  │ │  0x00007f48d8b8396a: cmp    %ebp,%r9d
+  0.40%    0.55%  │ │  0x00007f48d8b8396d: jge    0x00007f48d8b83a25  ;*if_icmplt
+                  │ │                                                ; - java.util.ArrayList$Itr::next@17 (line 853)
+                  │ │                                                ; - org.sample.lists.Lists::arrayList@20 (line 47)
+  3.62%    3.97%  │ │  0x00007f48d8b83973: mov    0x14(%r10),%r10d   ;*getfield elementData
+                  │ │                                                ; - java.util.ArrayList$Itr::next@32 (line 855)
+                  │ │                                                ; - org.sample.lists.Lists::arrayList@20 (line 47)
+  0.61%    0.79%  │ │  0x00007f48d8b83977: mov    0xc(%r10),%ebp     ;*arraylength
+                  │ │                                                ; - java.util.ArrayList$Itr::next@38 (line 856)
+                  │ │                                                ; - org.sample.lists.Lists::arrayList@20 (line 47)
+                  │ │                                                ; implicit exception: dispatches to 0x00007f48d8b83ab5
+  3.75%    5.63%  │ │  0x00007f48d8b8397b: cmp    %ebp,%r9d
+  2.50%    3.56%  │ │  0x00007f48d8b8397e: jge    0x00007f48d8b83a39  ;*if_icmplt
+                  │ │                                                ; - java.util.ArrayList$Itr::next@39 (line 856)
+                  │ │                                                ; - org.sample.lists.Lists::arrayList@20 (line 47)
+  3.29%    4.78%  │ │  0x00007f48d8b83984: mov    %r9d,0x10(%r11)    ;*putfield lastRet
+                  │ │                                                ; - java.util.ArrayList$Itr::next@61 (line 859)
+                  │ │                                                ; - org.sample.lists.Lists::arrayList@20 (line 47)
+  0.14%    0.16%  │ │  0x00007f48d8b83988: mov    %r9d,%r11d
+                  │ │  0x00007f48d8b8398b: inc    %r11d
+                  │ │  0x00007f48d8b8398e: mov    0x10(%rsp),%r8
+  3.37%    5.22%  │ │  0x00007f48d8b83993: mov    %r11d,0xc(%r8)     ;*putfield cursor
+                  │ │                                                ; - java.util.ArrayList$Itr::next@54 (line 858)
+                  │ │                                                ; - org.sample.lists.Lists::arrayList@20 (line 47)
+  0.64%    0.85%  │ │  0x00007f48d8b83997: cmp    %ebp,%r9d
+                  │╭│  0x00007f48d8b8399a: jae    0x00007f48d8b839eb
+  0.26%    0.27%  │││  0x00007f48d8b8399c: mov    0x10(%r10,%r9,4),%ebp  ;*aaload
+                  │││                                                ; - java.util.ArrayList$Itr::next@64 (line 859)
+                  │││                                                ; - org.sample.lists.Lists::arrayList@20 (line 47)
+  3.54%    4.24%  │││  0x00007f48d8b839a1: mov    0x8(%rbp),%r10d    ; implicit exception: dispatches to 0x00007f48d8b83ac5
+ 22.99%   12.38%  │││  0x00007f48d8b839a5: cmp    $0x20002264,%r10d  ;   {metadata(&apos;java/lang/Integer&apos;)}
+  3.07%    3.05%  │││  0x00007f48d8b839ac: jne    0x00007f48d8b83a8d  ;*invokeinterface next
+                  │││                                                ; - org.sample.lists.Lists::arrayList@20 (line 47)
+  3.43%    2.26%  │││  0x00007f48d8b839b2: mov    %rbp,%rdx          ;*checkcast
+                  │││                                                ; - org.sample.lists.Lists::arrayList@25 (line 47)
+  0.27%    0.16%  │││  0x00007f48d8b839b5: mov    0x8(%rsp),%rsi
+  0.19%    0.25%  │││  0x00007f48d8b839ba: nop
+                  │││  0x00007f48d8b839bb: callq  0x00007f48d8a0cd60  ; OopMap{[8]=Oop [16]=Oop off=256}
+                  │││                                                ;*invokevirtual consume
+                  │││                                                ; - org.sample.lists.Lists::arrayList@31 (line 48)
+                  │││                                                ;   {optimized virtual_call}
+  3.22%    4.04%  │││  0x00007f48d8b839c0: mov    0x10(%rsp),%r10
+  0.02%    0.04%  │││  0x00007f48d8b839c5: mov    0x18(%r10),%r10d   ;*getfield this$0
+                  │││                                                ; - java.util.ArrayList$Itr::hasNext@5 (line 846)
+                  │││                                                ; - org.sample.lists.Lists::arrayList@11 (line 47)
+  1.00%    1.42%  │││  0x00007f48d8b839c9: mov    0x10(%r10),%r8d    ; implicit exception: dispatches to 0x00007f48d8b83ad9
+  7.75%    9.85%  │││  0x00007f48d8b839cd: mov    0x10(%rsp),%r11
+                  │││  0x00007f48d8b839d2: mov    0xc(%r11),%r9d     ;*getfield cursor
+                  │││                                                ; - java.util.ArrayList$Itr::hasNext@1 (line 846)
+                  │││                                                ; - org.sample.lists.Lists::arrayList@11 (line 47)
+  0.92%    1.44%  │││  0x00007f48d8b839d6: cmp    %r8d,%r9d
+  1.98%    2.73%  ││╰  0x00007f48d8b839d9: jne    0x00007f48d8b83950  ;*ifeq
+                  ││                                                 ; - org.sample.lists.Lists::arrayList@16 (line 47)
+                  ↘│   0x00007f48d8b839df: add    $0x40,%rsp
+                   │   0x00007f48d8b839e3: pop    %rbp
+  0.01%            │   0x00007f48d8b839e4: test   %eax,0x15f5f616(%rip)        # 0x00007f48eeae3000
+                   │                                                 ;   {poll_return}
+                   │   0x00007f48d8b839ea: retq   
+                   ↘   0x00007f48d8b839eb: mov    $0xffffffe4,%esi
+                       0x00007f48d8b839f0: mov    %r9d,%ebp
+                       0x00007f48d8b839f3: rex.W pushq 0x8(%rsp)
+                       0x00007f48d8b839f8: rex.W popq (%rsp)
+                       0x00007f48d8b839fc: mov    %r8,0x8(%rsp)
+                       0x00007f48d8b83a01: mov    %r10d,0x10(%rsp)
+                       0x00007f48d8b83a06: nop
+                       0x00007f48d8b83a07: callq  0x00007f48d89cbee0  ; OopMap{[0]=Oop [8]=Oop [16]=NarrowOop off=332}
+....................................................................................................
+ 76.92%   78.12%  <total for region 1>
+
+....[Hottest Region 2]..............................................................................
+ [0x7f48d8b7c560:0x7f48d8b7c5e5] in org.openjdk.jmh.infra.Blackhole::consume
+
+                     # parm0:    rdx:rdx   = &apos;java/lang/Object&apos;
+                     #           [sp+0x20]  (sp of caller)
+                     0x00007f48d8b7c560: mov    0x8(%rsi),%r10d
+                     0x00007f48d8b7c564: shl    $0x3,%r10
+                     0x00007f48d8b7c568: cmp    %r10,%rax
+                     0x00007f48d8b7c56b: jne    0x00007f48d8a0cb60  ;   {runtime_call}
+                     0x00007f48d8b7c571: data16 xchg %ax,%ax
+                     0x00007f48d8b7c574: nopl   0x0(%rax,%rax,1)
+                     0x00007f48d8b7c57c: data16 data16 xchg %ax,%ax
+                   [Verified Entry Point]
+  7.17%    5.73%     0x00007f48d8b7c580: sub    $0x18,%rsp
+                     0x00007f48d8b7c587: mov    %rbp,0x10(%rsp)    ;*synchronization entry
+                                                                   ; - org.openjdk.jmh.infra.Blackhole::consume@-1 (line 316)
+  0.01%    0.02%     0x00007f48d8b7c58c: mov    0xc4(%rsi),%r11d   ;*getfield tlrMask
+                                                                   ; - org.openjdk.jmh.infra.Blackhole::consume@1 (line 316)
+  3.63%    4.17%     0x00007f48d8b7c593: imul   $0x19660d,0xc0(%rsi),%r10d
+  0.22%    0.29%     0x00007f48d8b7c59e: add    $0x3c6ef35f,%r10d  ;*iadd
+                                                                   ; - org.openjdk.jmh.infra.Blackhole::consume@15 (line 317)
+  0.11%    0.10%     0x00007f48d8b7c5a5: mov    %r10d,0xc0(%rsi)   ;*putfield tlr
+                                                                   ; - org.openjdk.jmh.infra.Blackhole::consume@17 (line 317)
+  0.25%    0.19%     0x00007f48d8b7c5ac: and    %r11d,%r10d
+  3.36%    3.12%     0x00007f48d8b7c5af: test   %r10d,%r10d
+  0.22%    0.26%  ╭  0x00007f48d8b7c5b2: je     0x00007f48d8b7c5c0  ;*return
+                  │                                                ; - org.openjdk.jmh.infra.Blackhole::consume@41 (line 323)
+  0.24%    0.30%  │  0x00007f48d8b7c5b4: add    $0x10,%rsp
+           0.01%  │  0x00007f48d8b7c5b8: pop    %rbp
+  3.60%    4.46%  │  0x00007f48d8b7c5b9: test   %eax,0x15f66a41(%rip)        # 0x00007f48eeae3000
+                  │                                                ;   {poll_return}
+  0.04%    0.07%  │  0x00007f48d8b7c5bf: retq   
+                  ↘  0x00007f48d8b7c5c0: shl    %r11d
+                     0x00007f48d8b7c5c3: mov    %rsi,%r10
+                     0x00007f48d8b7c5c6: inc    %r11d
+                     0x00007f48d8b7c5c9: shr    $0x9,%r10
+                     0x00007f48d8b7c5cd: mov    %rdx,%r8
+                     0x00007f48d8b7c5d0: mov    %r8d,0xd4(%rsi)
+                     0x00007f48d8b7c5d7: movabs $0x7f48d79d5000,%r8
+                     0x00007f48d8b7c5e1: mov    %r12b,(%r8,%r10,1)
+                     0x00007f48d8b7c5e5: mov    %r11d,0xc4(%rsi)
+....................................................................................................
+ 18.85%   18.72%  <total for region 2>
+
+....[Hottest Regions]...............................................................................
+ 76.92%   78.12%  [0x7f48d8b83932:0x7f48d8b83a07] in org.sample.lists.Lists::arrayList
+ 18.85%   18.72%  [0x7f48d8b7c560:0x7f48d8b7c5e5] in org.openjdk.jmh.infra.Blackhole::consume
+  0.25%    0.20%  [0xffffffff810644aa:0xffffffff810644aa] in [unknown] ([unknown])
+  0.11%    0.01%  [0xffffffff8182df50:0xffffffff8182df85] in [unknown] ([unknown])
+  0.07%    0.01%  [0x7f48ee6b44f2:0x7f48ee6b4509] in [unknown] (libpthread-2.23.so)
+  0.06%           [0xffffffff81243d82:0xffffffff81243d9f] in [unknown] ([unknown])
+  0.05%    0.01%  [0xffffffff8182be35:0xffffffff8182be48] in [unknown] ([unknown])
+  0.05%    0.05%  [0x7f48ed800250:0x7f48ed800265] in outputStream::update_position (libjvm.so)
+  0.05%    0.01%  [0x7f48edf3a110:0x7f48edf3a12e] in _IO_file_xsputn@@GLIBC_2.2.5 (libc-2.23.so)
+  0.04%    0.02%  [0xffffffff8120d33b:0xffffffff8120d367] in [unknown] ([unknown])
+  0.04%           [0xffffffff8120edda:0xffffffff8120edda] in [unknown] ([unknown])
+  0.04%    0.07%  [0xffffffff8138c460:0xffffffff8138c499] in [unknown] ([unknown])
+  0.04%           [0xffffffff8138ff89:0xffffffff8138ff91] in [unknown] ([unknown])
+  0.04%    0.02%  [0xffffffff813fe0fc:0xffffffff813fe101] in [unknown] ([unknown])
+  0.04%           [0x7f48d8b838c0:0x7f48d8b83908] in org.sample.lists.Lists::arrayList
+  0.04%    0.10%  [0x7f48ed802ef0:0x7f48ed802f0f] in fileStream::write (libjvm.so)
+  0.04%    0.05%  [0x7f48ed9bae89:0x7f48ed9baeba] in xmlTextStream::write (libjvm.so)
+  0.04%    0.02%  [0x7f48edf4bd1a:0x7f48edf4bd24] in strlen (libc-2.23.so)
+  0.04%    0.01%  [0x7f48edf56d34:0x7f48edf56d57] in __strchrnul (libc-2.23.so)
+  0.04%           [0x7f48ee6b41b2:0x7f48ee6b41bf] in __pthread_enable_asynccancel (libpthread-2.23.so)
+  3.16%    2.55%  <...other 345 warm regions...>
+....................................................................................................
+ 99.98%  100.00%  <totals>
+
+....[Hottest Methods (after inlining)]..............................................................
+ 76.96%   78.12%  org.sample.lists.Lists::arrayList
+ 18.85%   18.72%  org.openjdk.jmh.infra.Blackhole::consume
+  2.18%    1.65%  [unknown] ([unknown])
+  0.20%    0.06%  [unknown] (hsdis-amd64.so)
+  0.11%    0.11%  vfprintf (libc-2.23.so)
+  0.07%    0.01%  [unknown] (libpthread-2.23.so)
+  0.07%    0.07%  outputStream::update_position (libjvm.so)
+  0.06%    0.06%  _IO_fwrite (libc-2.23.so)
+  0.06%    0.10%  xmlTextStream::write (libjvm.so)
+  0.05%    0.02%  strlen (libc-2.23.so)
+  0.05%    0.04%  _IO_file_xsputn@@GLIBC_2.2.5 (libc-2.23.so)
+  0.04%    0.12%  fileStream::write (libjvm.so)
+  0.04%           __pthread_enable_asynccancel (libpthread-2.23.so)
+  0.04%    0.06%  __strchr_sse2 (libc-2.23.so)
+  0.04%           _IO_no_init (libc-2.23.so)
+  0.04%           __pthread_disable_asynccancel (libpthread-2.23.so)
+  0.04%           defaultStream::hold (libjvm.so)
+  0.04%    0.01%  __strchrnul (libc-2.23.so)
+  0.04%           decode_env::handle_event (libjvm.so)
+  0.04%           <stub: invokevirtual  182 invokevirtual>
+  0.98%    0.25%  <...other 66 warm methods...>
+....................................................................................................
+ 99.98%   99.43%  <totals>
+
+....[Distribution by Area]..........................................................................
+ 96.00%   96.87%  <generated code>
+  2.18%    1.65%  <native code in ([unknown])>
+  0.78%    0.79%  <native code in (libjvm.so)>
+  0.58%    0.59%  <native code in (libc-2.23.so)>
+  0.22%    0.07%  <native code in (hsdis-amd64.so)>
+  0.19%    0.04%  <native code in (libpthread-2.23.so)>
+  0.02%           <native code in (perf-3304.map)>
+....................................................................................................
+ 99.98%  100.00%  <totals>
+
+
+# JMH 1.12 (released 188 days ago, please consider updating!)
+# VM version: JDK 1.8.0_101, VM 25.101-b13
+# VM invoker: /usr/lib/jvm/java-8-oracle/jre/bin/java
+# VM options: <none>
+# Warmup: 5 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.sample.lists.Lists.arrayListIteratorOnly
+
+# Run progress: 50.00% complete, ETA 00:00:16
+# Fork: 1 of 1
+# Preparing profilers: LinuxPerfAsmProfiler 
+# Profilers consume stdout and stderr from target VM, use -v EXTRA to copy to console
+# Warmup Iteration   1: 27.106 ns/op
+# Warmup Iteration   2: 13.981 ns/op
+# Warmup Iteration   3: 16.142 ns/op
+# Warmup Iteration   4: 13.165 ns/op
+# Warmup Iteration   5: 13.008 ns/op
+Iteration   1: 13.634 ns/op
+Iteration   2: 13.232 ns/op
+Iteration   3: 12.986 ns/op
+Iteration   4: 13.109 ns/op
+Iteration   5: 13.136 ns/op
+# Processing profiler results: LinuxPerfAsmProfiler 
+
+
+Result "arrayListIteratorOnly":
+  13.219 ±(99.9%) 0.955 ns/op [Average]
+  (min, avg, max) = (12.986, 13.219, 13.634), stdev = 0.248
+  CI (99.9%): [12.264, 14.174] (assumes normal distribution)
+
+Secondary result "·asm":
+PrintAssembly processed: 116090 total address lines.
+Perf output processed (skipped 5.325 seconds):
+ Column 1: cycles (8028 events)
+ Column 2: instructions (7954 events)
+
+Hottest code regions (>10.00% "cycles" events):
+....[Hottest Region 1]..............................................................................
+ [0x7f01d51d1620:0x7f01d51d1704] in org.sample.lists.generated.Lists_arrayListIteratorOnly_jmhTest::arrayListIteratorOnly_avgt_jmhStub
+
+                      0x00007f01d51d1620: mov    (%rsp),%r9
+                      0x00007f01d51d1624: movzbl 0x94(%r9),%r11d    ;*getfield isDone
+                                                                    ; - org.sample.lists.generated.Lists_arrayListIteratorOnly_jmhTest::arrayListIteratorOnly_avgt_jmhStub@29 (line 199)
+                                                                    ; implicit exception: dispatches to 0x00007f01d51d17e5
+                      0x00007f01d51d162c: test   %r11d,%r11d
+                      0x00007f01d51d162f: jne    0x00007f01d51d1709  ;*ifeq
+                                                                    ; - org.sample.lists.generated.Lists_arrayListIteratorOnly_jmhTest::arrayListIteratorOnly_avgt_jmhStub@32 (line 199)
+                      0x00007f01d51d1635: mov    $0x1,%ebx
+                  ╭   0x00007f01d51d163a: jmpq   0x00007f01d51d16bc
+                  │   0x00007f01d51d163f: nop
+  2.88%    2.00%  │↗  0x00007f01d51d1640: mov    %r11,0x60(%r15)
+  0.01%           ││  0x00007f01d51d1644: prefetchnta 0x100(%r11)
+  1.44%    1.09%  ││  0x00007f01d51d164c: mov    0x18(%rsp),%r10
+  0.01%    0.04%  ││  0x00007f01d51d1651: mov    0xa8(%r10),%r10
+  2.91%    2.24%  ││  0x00007f01d51d1658: mov    %r10,(%rax)
+  0.50%    0.62%  ││  0x00007f01d51d165b: movl   $0x2000a384,0x8(%rax)  ;   {metadata(&apos;java/util/ArrayList$Itr&apos;)}
+  0.31%    0.44%  ││  0x00007f01d51d1662: mov    %r12d,0xc(%rax)
+  0.01%    0.01%  ││  0x00007f01d51d1666: mov    %r12,0x18(%rax)
+  1.96%    1.77%  ││  0x00007f01d51d166a: mov    %r9,(%rsp)
+  0.64%    0.62%  ││  0x00007f01d51d166e: mov    %rbx,0x28(%rsp)
+  0.36%    0.40%  ││  0x00007f01d51d1673: mov    $0xffffffff,%r10d
+                  ││  0x00007f01d51d1679: mov    %r10,0x10(%rax)    ;*new  ; - java.util.ArrayList::iterator@0 (line 834)
+                  ││                                                ; - org.sample.lists.Lists::arrayListIteratorOnly@4 (line 36)
+                  ││                                                ; - org.sample.lists.generated.Lists_arrayListIteratorOnly_jmhTest::arrayListIteratorOnly_avgt_jmhStub@16 (line 197)
+  2.34%    2.65%  ││  0x00007f01d51d167d: mov    %rax,%rdx          ;*areturn
+                  ││                                                ; - java.util.ArrayList::iterator@9 (line 834)
+                  ││                                                ; - org.sample.lists.Lists::arrayListIteratorOnly@4 (line 36)
+                  ││                                                ; - org.sample.lists.generated.Lists_arrayListIteratorOnly_jmhTest::arrayListIteratorOnly_avgt_jmhStub@16 (line 197)
+  0.26%    0.43%  ││  0x00007f01d51d1680: mov    0xc(%rbp),%r10d    ;*getfield modCount
+                  ││                                                ; - java.util.ArrayList$Itr::&lt;init&gt;@19 (line 843)
+                  ││                                                ; - java.util.ArrayList$Itr::&lt;init&gt;@2 (line 840)
+                  ││                                                ; - java.util.ArrayList::iterator@6 (line 834)
+                  ││                                                ; - org.sample.lists.Lists::arrayListIteratorOnly@4 (line 36)
+                  ││                                                ; - org.sample.lists.generated.Lists_arrayListIteratorOnly_jmhTest::arrayListIteratorOnly_avgt_jmhStub@16 (line 197)
+  5.52%    2.58%  ││  0x00007f01d51d1684: mov    %r10d,0x14(%rax)   ;*putfield expectedModCount
+                  ││                                                ; - java.util.ArrayList$Itr::&lt;init&gt;@22 (line 843)
+                  ││                                                ; - java.util.ArrayList$Itr::&lt;init&gt;@2 (line 840)
+                  ││                                                ; - java.util.ArrayList::iterator@6 (line 834)
+                  ││                                                ; - org.sample.lists.Lists::arrayListIteratorOnly@4 (line 36)
+                  ││                                                ; - org.sample.lists.generated.Lists_arrayListIteratorOnly_jmhTest::arrayListIteratorOnly_avgt_jmhStub@16 (line 197)
+  0.97%    1.17%  ││  0x00007f01d51d1688: mov    %rbp,%r11
+  1.66%    1.99%  ││  0x00007f01d51d168b: mov    %r11d,0x18(%rax)   ;*synchronization entry
+                  ││                                                ; - java.util.ArrayList$Itr::&lt;init&gt;@-1 (line 840)
+                  ││                                                ; - java.util.ArrayList::iterator@6 (line 834)
+                  ││                                                ; - org.sample.lists.Lists::arrayListIteratorOnly@4 (line 36)
+                  ││                                                ; - org.sample.lists.generated.Lists_arrayListIteratorOnly_jmhTest::arrayListIteratorOnly_avgt_jmhStub@16 (line 197)
+  0.66%    1.26%  ││  0x00007f01d51d168f: mov    0x20(%rsp),%rsi
+  3.41%    4.07%  ││  0x00007f01d51d1694: data16 xchg %ax,%ax
+  0.19%    0.18%  ││  0x00007f01d51d1697: callq  0x00007f01d5045d60  ; OopMap{[0]=Oop [8]=Oop [16]=Oop [32]=Oop off=380}
+                  ││                                                ;*invokevirtual consume
+                  ││                                                ; - org.sample.lists.generated.Lists_arrayListIteratorOnly_jmhTest::arrayListIteratorOnly_avgt_jmhStub@19 (line 197)
+                  ││                                                ;   {optimized virtual_call}
+  2.72%    4.17%  ││  0x00007f01d51d169c: mov    (%rsp),%r9
+  0.37%    0.10%  ││  0x00007f01d51d16a0: movzbl 0x94(%r9),%r11d    ;*getfield isDone
+                  ││                                                ; - org.sample.lists.generated.Lists_arrayListIteratorOnly_jmhTest::arrayListIteratorOnly_avgt_jmhStub@29 (line 199)
+  0.77%    0.60%  ││  0x00007f01d51d16a8: mov    0x28(%rsp),%rbx
+  3.03%    3.62%  ││  0x00007f01d51d16ad: add    $0x1,%rbx          ; OopMap{r9=Oop [0]=Oop [8]=Oop [16]=Oop [32]=Oop off=401}
+                  ││                                                ;*ifeq
+                  ││                                                ; - org.sample.lists.generated.Lists_arrayListIteratorOnly_jmhTest::arrayListIteratorOnly_avgt_jmhStub@32 (line 199)
+                  ││  0x00007f01d51d16b1: test   %eax,0x17746949(%rip)        # 0x00007f01ec918000
+                  ││                                                ;   {poll}
+  0.10%    0.14%  ││  0x00007f01d51d16b7: test   %r11d,%r11d
+  0.17%    0.15%  ││  0x00007f01d51d16ba: jne    0x00007f01d51d170e  ;*aload
+                  ││                                                ; - org.sample.lists.generated.Lists_arrayListIteratorOnly_jmhTest::arrayListIteratorOnly_avgt_jmhStub@13 (line 197)
+  2.84%    3.53%  ↘│  0x00007f01d51d16bc: mov    0x10(%rsp),%r10
+  0.10%    0.10%   │  0x00007f01d51d16c1: mov    0xc(%r10),%r10d    ;*getfield arrayList
+                   │                                                ; - org.sample.lists.Lists::arrayListIteratorOnly@1 (line 36)
+                   │                                                ; - org.sample.lists.generated.Lists_arrayListIteratorOnly_jmhTest::arrayListIteratorOnly_avgt_jmhStub@16 (line 197)
+  0.88%    0.94%   │  0x00007f01d51d16c5: mov    0x8(%r10),%r8d     ; implicit exception: dispatches to 0x00007f01d51d17b5
+  4.01%    5.61%   │  0x00007f01d51d16c9: cmp    $0x20002f1e,%r8d   ;   {metadata(&apos;java/util/ArrayList&apos;)}
+  2.99%    2.84%   │  0x00007f01d51d16d0: jne    0x00007f01d51d1738
+  2.28%    2.28%   │  0x00007f01d51d16d2: mov    0x60(%r15),%rax
+  0.07%    0.08%   │  0x00007f01d51d16d6: mov    %rax,%r11
+  0.02%    0.03%   │  0x00007f01d51d16d9: add    $0x20,%r11
+  0.98%    0.62%   │  0x00007f01d51d16dd: mov    %r10,%rbp          ;*invokeinterface iterator
+                   │                                                ; - org.sample.lists.Lists::arrayListIteratorOnly@4 (line 36)
+                   │                                                ; - org.sample.lists.generated.Lists_arrayListIteratorOnly_jmhTest::arrayListIteratorOnly_avgt_jmhStub@16 (line 197)
+  1.69%    1.71%   │  0x00007f01d51d16e0: cmp    0x70(%r15),%r11
+  0.06%    0.09%   ╰  0x00007f01d51d16e4: jb     0x00007f01d51d1640
+                      0x00007f01d51d16ea: mov    %rbx,0x28(%rsp)
+                      0x00007f01d51d16ef: mov    %r9,(%rsp)
+                      0x00007f01d51d16f3: movabs $0x100051c20,%rsi  ;   {metadata(&apos;java/util/ArrayList$Itr&apos;)}
+                      0x00007f01d51d16fd: xchg   %ax,%ax
+                      0x00007f01d51d16ff: callq  0x00007f01d506c0a0  ; OopMap{rbp=Oop [0]=Oop [8]=Oop [16]=Oop [32]=Oop off=484}
+                                                                    ;*new  ; - java.util.ArrayList::iterator@0 (line 834)
+                                                                    ; - org.sample.lists.Lists::arrayListIteratorOnly@4 (line 36)
+                                                                    ; - org.sample.lists.generated.Lists_arrayListIteratorOnly_jmhTest::arrayListIteratorOnly_avgt_jmhStub@16 (line 197)
+                                                                    ;   {runtime_call}
+                      0x00007f01d51d1704: jmpq   0x00007f01d51d1673
+....................................................................................................
+ 49.15%   50.15%  <total for region 1>
+
+....[Hottest Region 2]..............................................................................
+ [0x7f01d51bc5a0:0x7f01d51bc625] in org.openjdk.jmh.infra.Blackhole::consume
+
+                     # parm0:    rdx:rdx   = &apos;java/lang/Object&apos;
+                     #           [sp+0x20]  (sp of caller)
+                     0x00007f01d51bc5a0: mov    0x8(%rsi),%r10d
+                     0x00007f01d51bc5a4: shl    $0x3,%r10
+                     0x00007f01d51bc5a8: cmp    %r10,%rax
+                     0x00007f01d51bc5ab: jne    0x00007f01d5045b60  ;   {runtime_call}
+                     0x00007f01d51bc5b1: data16 xchg %ax,%ax
+                     0x00007f01d51bc5b4: nopl   0x0(%rax,%rax,1)
+                     0x00007f01d51bc5bc: data16 data16 xchg %ax,%ax
+                   [Verified Entry Point]
+ 10.41%    8.76%     0x00007f01d51bc5c0: sub    $0x18,%rsp
+  0.12%    0.05%     0x00007f01d51bc5c7: mov    %rbp,0x10(%rsp)    ;*synchronization entry
+                                                                   ; - org.openjdk.jmh.infra.Blackhole::consume@-1 (line 316)
+  1.16%    0.96%     0x00007f01d51bc5cc: mov    0xc4(%rsi),%r11d   ;*getfield tlrMask
+                                                                   ; - org.openjdk.jmh.infra.Blackhole::consume@1 (line 316)
+  5.94%    8.25%     0x00007f01d51bc5d3: imul   $0x19660d,0xc0(%rsi),%r10d
+  6.81%    7.63%     0x00007f01d51bc5de: add    $0x3c6ef35f,%r10d  ;*iadd
+                                                                   ; - org.openjdk.jmh.infra.Blackhole::consume@15 (line 317)
+  2.32%    2.56%     0x00007f01d51bc5e5: mov    %r10d,0xc0(%rsi)   ;*putfield tlr
+                                                                   ; - org.openjdk.jmh.infra.Blackhole::consume@17 (line 317)
+  3.31%    3.62%     0x00007f01d51bc5ec: and    %r11d,%r10d
+  0.49%    0.69%     0x00007f01d51bc5ef: test   %r10d,%r10d
+  2.13%    2.59%  ╭  0x00007f01d51bc5f2: je     0x00007f01d51bc600  ;*return
+                  │                                                ; - org.openjdk.jmh.infra.Blackhole::consume@41 (line 323)
+  2.88%    3.61%  │  0x00007f01d51bc5f4: add    $0x10,%rsp
+  0.06%    0.01%  │  0x00007f01d51bc5f8: pop    %rbp
+  2.77%    0.74%  │  0x00007f01d51bc5f9: test   %eax,0x1775ba01(%rip)        # 0x00007f01ec918000
+                  │                                                ;   {poll_return}
+  0.31%    0.40%  │  0x00007f01d51bc5ff: retq   
+                  ↘  0x00007f01d51bc600: shl    %r11d
+                     0x00007f01d51bc603: mov    %rsi,%r10
+                     0x00007f01d51bc606: inc    %r11d
+                     0x00007f01d51bc609: shr    $0x9,%r10
+                     0x00007f01d51bc60d: mov    %rdx,%r8
+                     0x00007f01d51bc610: mov    %r8d,0xd4(%rsi)
+                     0x00007f01d51bc617: movabs $0x7f01e896f000,%r8
+                     0x00007f01d51bc621: mov    %r12b,(%r8,%r10,1)
+                     0x00007f01d51bc625: mov    %r11d,0xc4(%rsi)
+....................................................................................................
+ 38.71%   39.88%  <total for region 2>
+
+....[Hottest Regions]...............................................................................
+ 49.15%   50.15%  [0x7f01d51d1620:0x7f01d51d1704] in org.sample.lists.generated.Lists_arrayListIteratorOnly_jmhTest::arrayListIteratorOnly_avgt_jmhStub
+ 38.71%   39.88%  [0x7f01d51bc5a0:0x7f01d51bc625] in org.openjdk.jmh.infra.Blackhole::consume
+  5.22%    5.51%  [0x7f01d51d0cea:0x7f01d51d0df6] in org.sample.lists.generated.Lists_arrayListIteratorOnly_jmhTest::arrayListIteratorOnly_avgt_jmhStub
+  0.15%    0.10%  [0xffffffff810644a1:0xffffffff810644aa] in [unknown] ([unknown])
+  0.14%    0.33%  [0x7f01eb736400:0x7f01eb736415] in StringTable::unlink_or_oops_do (libjvm.so)
+  0.11%    0.04%  [0x7f01eb503da0:0x7f01eb503da9] in SpinPause (libjvm.so)
+  0.11%    0.01%  [0x7f01eb697ec6:0x7f01eb697ec6] in PSScavengeKlassClosure::do_klass (libjvm.so)
+  0.10%           [0x7f01eb6c0e9d:0x7f01eb6c0ea6] in OptoRuntime::new_instance_C (libjvm.so)
+  0.09%    0.03%  [0xffffffff813fe0fc:0xffffffff813fe103] in [unknown] ([unknown])
+  0.09%    0.15%  [0x7f01eb637ef0:0x7f01eb637f14] in fileStream::write (libjvm.so)
+  0.07%           [0xffffffff810b53ed:0xffffffff810b540b] in [unknown] ([unknown])
+  0.07%    0.01%  [0x7f01eb736449:0x7f01eb736449] in StringTable::unlink_or_oops_do (libjvm.so)
+  0.07%    0.01%  [0x7f01ec4e94f2:0x7f01ec4e9501] in [unknown] (libpthread-2.23.so)
+  0.06%    0.04%  [0xffffffff81037cf1:0xffffffff81037d2a] in [unknown] ([unknown])
+  0.06%    0.04%  [0xffffffff811be1c5:0xffffffff811be1c5] in [unknown] ([unknown])
+  0.06%    0.01%  [0xffffffff8122a7a6:0xffffffff8122a7ae] in [unknown] ([unknown])
+  0.06%    0.04%  [0xffffffff8182be32:0xffffffff8182be35] in [unknown] ([unknown])
+  0.06%           [0xffffffff8182dd24:0xffffffff8182dd24] in [unknown] ([unknown])
+  0.06%    0.01%  [0xffffffff8182df50:0xffffffff8182df74] in [unknown] ([unknown])
+  0.06%    0.06%  [0x7f01eb1068d0:0x7f01eb1068d7] in CardTableExtension::scavenge_contents_parallel (libjvm.so)
+  5.47%    3.57%  <...other 466 warm regions...>
+....................................................................................................
+100.00%   99.99%  <totals>
+
+....[Hottest Methods (after inlining)]..............................................................
+ 54.37%   55.66%  org.sample.lists.generated.Lists_arrayListIteratorOnly_jmhTest::arrayListIteratorOnly_avgt_jmhStub
+ 38.71%   39.88%  org.openjdk.jmh.infra.Blackhole::consume
+  3.31%    1.73%  [unknown] ([unknown])
+  0.25%    0.44%  StringTable::unlink_or_oops_do (libjvm.so)
+  0.21%    0.10%  [unknown] (hsdis-amd64.so)
+  0.14%    0.08%  _IO_fwrite (libc-2.23.so)
+  0.12%           OptoRuntime::new_instance_C (libjvm.so)
+  0.11%    0.01%  PSScavengeKlassClosure::do_klass (libjvm.so)
+  0.11%    0.13%  CardTableExtension::scavenge_contents_parallel (libjvm.so)
+  0.11%    0.19%  fileStream::write (libjvm.so)
+  0.11%    0.04%  SpinPause (libjvm.so)
+  0.09%    0.06%  xmlTextStream::write (libjvm.so)
+  0.07%    0.14%  RelocIterator::initialize (libjvm.so)
+  0.07%    0.06%  vfprintf (libc-2.23.so)
+  0.07%    0.05%  _IO_fflush (libc-2.23.so)
+  0.07%    0.01%  [unknown] (libpthread-2.23.so)
+  0.06%    0.05%  __GI___mempcpy (libc-2.23.so)
+  0.06%    0.08%  strlen (libc-2.23.so)
+  0.06%    0.01%  __strchr_sse2 (libc-2.23.so)
+  0.06%           __pthread_disable_asynccancel (libpthread-2.23.so)
+  1.79%    0.57%  <...other 105 warm methods...>
+....................................................................................................
+100.00%   99.28%  <totals>
+
+....[Distribution by Area]..........................................................................
+ 93.14%   95.57%  <generated code>
+  3.31%    1.73%  <native code in ([unknown])>
+  2.27%    1.85%  <native code in (libjvm.so)>
+  0.78%    0.63%  <native code in (libc-2.23.so)>
+  0.24%    0.10%  <native code in (hsdis-amd64.so)>
+  0.24%    0.09%  <native code in (libpthread-2.23.so)>
+  0.01%    0.01%  <native code in (ld-2.23.so)>
+  0.01%           <native code in (perf-3370.map)>
+....................................................................................................
+100.00%   99.99%  <totals>
+
+
+
+# Run complete. Total time: 00:00:31
+
+Benchmark                         Mode  Cnt   Score   Error  Units
+Lists.arrayList                   avgt    5  12.107 ± 0.343  ns/op
+Lists.arrayList:·asm              avgt          NaN            ---
+Lists.arrayListIteratorOnly       avgt    5  13.219 ± 0.955  ns/op
+Lists.arrayListIteratorOnly:·asm  avgt          NaN            ---
+# JMH 1.12 (released 188 days ago, please consider updating!)
+# VM version: JDK 1.8.0_101, VM 25.101-b13
+# VM invoker: /usr/lib/jvm/java-8-oracle/jre/bin/java
+# VM options: <none>
+# Warmup: 5 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.sample.lists.Lists.arrayList
+
+# Run progress: 0.00% complete, ETA 00:00:20
+# Fork: 1 of 1
+# Preparing profilers: LinuxPerfProfiler 
+# Profilers consume stderr from target VM, use -v EXTRA to copy to console
+# Warmup Iteration   1: 12.328 ns/op
+# Warmup Iteration   2: 9.496 ns/op
+# Warmup Iteration   3: 9.335 ns/op
+# Warmup Iteration   4: 9.399 ns/op
+# Warmup Iteration   5: 9.372 ns/op
+Iteration   1: 9.493 ns/op
+Iteration   2: 9.420 ns/op
+Iteration   3: 9.409 ns/op
+Iteration   4: 9.448 ns/op
+Iteration   5: 9.537 ns/op
+# Processing profiler results: LinuxPerfProfiler 
+
+
+Result "arrayList":
+  9.461 ±(99.9%) 0.206 ns/op [Average]
+  (min, avg, max) = (9.409, 9.461, 9.537), stdev = 0.053
+  CI (99.9%): [9.256, 9.667] (assumes normal distribution)
+
+Secondary result "·cpi":
+Perf stats:
+--------------------------------------------------
+
+       4578,029040      task-clock (msec)         #    0,433 CPUs utilized          
+               224      context-switches          #    0,049 K/sec                  
+                18      cpu-migrations            #    0,004 K/sec                  
+               174      page-faults               #    0,038 K/sec                  
+    10.426.612.558      cycles                    #    2,278 GHz                      (13,44%)
+   <not supported>      stalled-cycles-frontend  
+   <not supported>      stalled-cycles-backend   
+    21.971.015.780      instructions              #    2,11  insns per cycle          (20,54%)
+     4.221.869.868      branches                  #  922,203 M/sec                    (20,75%)
+         1.144.208      branch-misses             #    0,03% of all branches          (20,72%)
+     3.327.898.746      L1-dcache-loads           #  726,928 M/sec                    (40,15%)
+         3.000.166      L1-dcache-load-misses     #    0,09% of all L1-dcache hits    (40,65%)
+        51.194.379      LLC-loads                 #   11,183 M/sec                    (40,35%)
+           170.063      LLC-load-misses           #    0,01% of all LL-cache hits     (40,41%)
+     3.601.304.989      L1-icache-loads           #  786,650 M/sec                    (39,97%)
+           324.300      L1-icache-load-misses     #    0,071 M/sec                    (39,04%)
+     3.352.696.780      dTLB-loads                #  732,345 M/sec                    (38,74%)
+           887.103      dTLB-load-misses          #    0,03% of all dTLB cache hits   (39,59%)
+     7.595.495.184      iTLB-loads                # 1659,119 M/sec                    (58,98%)
+             2.540      iTLB-load-misses          #    0,00% of all iTLB cache hits   (58,46%)
+        48.607.646      L1-dcache-prefetches      #   10,618 M/sec                    (59,51%)
+   <not supported>      L1-dcache-prefetch-misses
+
+      10,582089413 seconds time elapsed
+
+
+
+# JMH 1.12 (released 188 days ago, please consider updating!)
+# VM version: JDK 1.8.0_101, VM 25.101-b13
+# VM invoker: /usr/lib/jvm/java-8-oracle/jre/bin/java
+# VM options: <none>
+# Warmup: 5 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.sample.lists.Lists.arrayListIteratorOnly
+
+# Run progress: 50.00% complete, ETA 00:00:10
+# Fork: 1 of 1
+# Preparing profilers: LinuxPerfProfiler 
+# Profilers consume stderr from target VM, use -v EXTRA to copy to console
+# Warmup Iteration   1: 36.073 ns/op
+# Warmup Iteration   2: 16.260 ns/op
+# Warmup Iteration   3: 13.376 ns/op
+# Warmup Iteration   4: 13.451 ns/op
+# Warmup Iteration   5: 13.571 ns/op
+Iteration   1: 13.622 ns/op
+Iteration   2: 13.590 ns/op
+Iteration   3: 13.616 ns/op
+Iteration   4: 13.574 ns/op
+Iteration   5: 13.637 ns/op
+# Processing profiler results: LinuxPerfProfiler 
+
+
+Result "arrayListIteratorOnly":
+  13.608 ±(99.9%) 0.099 ns/op [Average]
+  (min, avg, max) = (13.574, 13.608, 13.637), stdev = 0.026
+  CI (99.9%): [13.509, 13.707] (assumes normal distribution)
+
+Secondary result "·cpi":
+Perf stats:
+--------------------------------------------------
+
+       4597,745486      task-clock (msec)         #    0,435 CPUs utilized          
+               828      context-switches          #    0,180 K/sec                  
+               143      cpu-migrations            #    0,031 K/sec                  
+               178      page-faults               #    0,039 K/sec                  
+    10.228.044.595      cycles                    #    2,225 GHz                      (13,85%)
+   <not supported>      stalled-cycles-frontend  
+   <not supported>      stalled-cycles-backend   
+    16.432.030.210      instructions              #    1,61  insns per cycle          (21,08%)
+     1.952.178.968      branches                  #  424,595 M/sec                    (21,23%)
+         1.592.520      branch-misses             #    0,08% of all branches          (21,41%)
+     6.484.165.640      L1-dcache-loads           # 1410,292 M/sec                    (14,19%)
+        28.017.778      L1-dcache-load-misses     #    0,43% of all L1-dcache hits    (14,60%)
+       159.848.133      LLC-loads                 #   34,767 M/sec                    (14,48%)
+        27.745.850      LLC-load-misses           #    0,56% of all LL-cache hits     (14,23%)
+     9.787.902.185      L1-icache-loads           # 2128,848 M/sec                    (14,21%)
+         1.206.172      L1-icache-load-misses     #    0,262 M/sec                    (14,28%)
+     5.206.253.070      dTLB-loads                # 1132,349 M/sec                    (16,84%)
+           546.912      dTLB-load-misses          #    0,01% of all dTLB cache hits   (17,95%)
+    12.314.851.829      iTLB-loads                # 2678,454 M/sec                    (27,14%)
+             4.605      iTLB-load-misses          #    0,00% of all iTLB cache hits   (27,12%)
+       115.350.085      L1-dcache-prefetches      #   25,088 M/sec                    (27,13%)
+   <not supported>      L1-dcache-prefetch-misses
+
+      10,577704270 seconds time elapsed
+
+
+
+# Run complete. Total time: 00:00:21
+
+Benchmark                         Mode  Cnt   Score   Error  Units
+Lists.arrayList                   avgt    5   9.461 ± 0.206  ns/op
+Lists.arrayList:·cpi              avgt        0.476            CPI
+Lists.arrayListIteratorOnly       avgt    5  13.608 ± 0.099  ns/op
+Lists.arrayListIteratorOnly:·cpi  avgt        0.625            CPI
