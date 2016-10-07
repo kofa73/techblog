@@ -42,8 +42,18 @@ public class Lists {
 	}
 	
 	@Benchmark
+	public Integer arrayListFirstElement() {
+		return arrayList.listIterator().next();
+	}
+
+	@Benchmark
+	public Integer linkedListFirstElement() {
+		return linkedList.listIterator().next();
+	}
+
+	@Benchmark
 	@OperationsPerInvocation(100_000)
-	public void arrayList(Blackhole blackhole) {
+	public void arrayListIteration(Blackhole blackhole) {
 		for (Integer i : arrayList) {
 			blackhole.consume(i);
 		}
@@ -51,9 +61,10 @@ public class Lists {
 	
 	@Benchmark
 	@OperationsPerInvocation(100_000)
-	public void linkedList(Blackhole blackhole) {
+	public void linkedListIteration(Blackhole blackhole) {
 		for (Integer i : linkedList) {
 			blackhole.consume(i);
 		}
 	}
+	
 }
