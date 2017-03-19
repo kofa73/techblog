@@ -13,8 +13,7 @@ public class TryWithResources {
         }
     }
 
-    private static void tryWithTwoResources()
-            throws ObjectConstructionFailedException, OperationFailedException, CleanupFailedException {
+    private static void tryWithTwoResources() throws ObjectConstructionFailedException, OperationFailedException, CleanupFailedException {
         try (Resource resource1 = new Resource("1"); Resource resource2 = new Resource("2")) {
             resource1.doSomething();
             resource2.doSomething();
