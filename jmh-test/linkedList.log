@@ -1,0 +1,713 @@
+$ java -jar target/benchmarks.jar linkedList -wi 5 -i 5 -f 1 -prof perfasm >>linkedList.log 2>&1
+# JMH 1.12 (released 188 days ago, please consider updating!)
+# VM version: JDK 1.8.0_101, VM 25.101-b13
+# VM invoker: /usr/lib/jvm/java-8-oracle/jre/bin/java
+# VM options: <none>
+# Warmup: 5 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.sample.lists.Lists.linkedList
+
+# Run progress: 0.00% complete, ETA 00:00:20
+# Fork: 1 of 1
+# Preparing profilers: LinuxPerfAsmProfiler 
+# Profilers consume stdout and stderr from target VM, use -v EXTRA to copy to console
+# Warmup Iteration   1: 12.779 ns/op
+# Warmup Iteration   2: 11.310 ns/op
+# Warmup Iteration   3: 11.137 ns/op
+# Warmup Iteration   4: 11.173 ns/op
+# Warmup Iteration   5: 11.231 ns/op
+Iteration   1: 11.308 ns/op
+Iteration   2: 11.229 ns/op
+Iteration   3: 11.098 ns/op
+Iteration   4: 11.118 ns/op
+Iteration   5: 11.207 ns/op
+# Processing profiler results: LinuxPerfAsmProfiler 
+
+
+Result "linkedList":
+  11.192 ±(99.9%) 0.330 ns/op [Average]
+  (min, avg, max) = (11.098, 11.192, 11.308), stdev = 0.086
+  CI (99.9%): [10.862, 11.522] (assumes normal distribution)
+
+Secondary result "·asm":
+PrintAssembly processed: 116700 total address lines.
+Perf output processed (skipped 5.308 seconds):
+ Column 1: cycles (8343 events)
+ Column 2: instructions (8252 events)
+
+Hottest code regions (>10.00% "cycles" events):
+....[Hottest Region 1]..............................................................................
+ [0x7f1ccd1cbdd9:0x7f1ccd1cbeb6] in org.sample.lists.Lists::linkedList
+
+                                                                       ; - org.sample.lists.Lists::linkedList@11 (line 55)
+                         0x00007f1ccd1cbdd9: mov    (%rsp),%rcx
+                         0x00007f1ccd1cbddd: test   %rcx,%rcx
+                  ╭      0x00007f1ccd1cbde0: jne    0x00007f1ccd1cbdf5
+                  │      0x00007f1ccd1cbde2: mov    $0xffffff86,%esi
+                  │      0x00007f1ccd1cbde7: callq  0x00007f1ccd004ee0  ; OopMap{rbp=Oop [0]=Oop off=140}
+                  │                                                    ;*aload_2
+                  │                                                    ; - org.sample.lists.Lists::linkedList@19 (line 55)
+                  │                                                    ;   {runtime_call}
+                  │      0x00007f1ccd1cbdec: callq  0x00007f1ce31420b0  ;   {runtime_call}
+  3.49%    5.27%  │  ↗   0x00007f1ccd1cbdf1: mov    (%rsp),%rcx        ;*aload_2
+                  │  │                                                 ; - org.sample.lists.Lists::linkedList@19 (line 55)
+                  ↘  │   0x00007f1ccd1cbdf5: mov    0xc(%r11),%r10d    ;*getfield modCount
+                     │                                                 ; - java.util.LinkedList$ListItr::checkForComodification@4 (line 965)
+                     │                                                 ; - java.util.LinkedList$ListItr::next@1 (line 888)
+                     │                                                 ; - org.sample.lists.Lists::linkedList@20 (line 55)
+                     │                                                 ; implicit exception: dispatches to 0x00007f1ccd1cbf29
+  0.12%    0.36%     │   0x00007f1ccd1cbdf9: mov    0x10(%rbp),%r8d    ;*getfield expectedModCount
+                     │                                                 ; - java.util.LinkedList$ListItr::checkForComodification@8 (line 965)
+                     │                                                 ; - java.util.LinkedList$ListItr::next@1 (line 888)
+                     │                                                 ; - org.sample.lists.Lists::linkedList@20 (line 55)
+  3.22%    4.18%     │   0x00007f1ccd1cbdfd: cmp    %r8d,%r10d
+  0.24%    0.38%   ╭ │   0x00007f1ccd1cbe00: jne    0x00007f1ccd1cbeb1  ;*if_icmpeq
+                   │ │                                                 ; - java.util.LinkedList$ListItr::checkForComodification@11 (line 965)
+                   │ │                                                 ; - java.util.LinkedList$ListItr::next@1 (line 888)
+                   │ │                                                 ; - org.sample.lists.Lists::linkedList@20 (line 55)
+  0.41%    0.58%   │ │   0x00007f1ccd1cbe06: mov    0x10(%r11),%r11d   ;*getfield size
+                   │ │                                                 ; - java.util.LinkedList$ListItr::hasNext@8 (line 884)
+                   │ │                                                 ; - java.util.LinkedList$ListItr::next@5 (line 889)
+                   │ │                                                 ; - org.sample.lists.Lists::linkedList@20 (line 55)
+  0.12%    0.10%   │ │   0x00007f1ccd1cbe0a: cmp    %r11d,%r9d
+  3.43%    4.54%   │╭│   0x00007f1ccd1cbe0d: jge    0x00007f1ccd1cbea9  ;*if_icmpge
+                   │││                                                 ; - java.util.LinkedList$ListItr::hasNext@11 (line 884)
+                   │││                                                 ; - java.util.LinkedList$ListItr::next@5 (line 889)
+                   │││                                                 ; - org.sample.lists.Lists::linkedList@20 (line 55)
+  0.40%    0.50%   │││   0x00007f1ccd1cbe13: mov    $0x1,%r10d         ;*ireturn
+                   │││                                                 ; - java.util.LinkedList$ListItr::hasNext@19 (line 884)
+                   │││                                                 ; - java.util.LinkedList$ListItr::next@5 (line 889)
+                   │││                                                 ; - org.sample.lists.Lists::linkedList@20 (line 55)
+  0.28%    0.24%   │││↗  0x00007f1ccd1cbe19: cmp    %r11d,%r9d
+  0.07%    0.05%   ││││  0x00007f1ccd1cbe1c: jge    0x00007f1ccd1cbed1  ;*ifne
+                   ││││                                                ; - java.util.LinkedList$ListItr::next@8 (line 889)
+                   ││││                                                ; - org.sample.lists.Lists::linkedList@20 (line 55)
+  3.78%    3.94%   ││││  0x00007f1ccd1cbe22: mov    0x18(%rbp),%r8d    ;*getfield next
+                   ││││                                                ; - java.util.LinkedList$ListItr::next@21 (line 892)
+                   ││││                                                ; - org.sample.lists.Lists::linkedList@20 (line 55)
+  0.12%    0.18%   ││││  0x00007f1ccd1cbe26: mov    %r8d,0x14(%rbp)
+  0.32%    0.38%   ││││  0x00007f1ccd1cbe2a: mov    %rbp,%r10
+                   ││││  0x00007f1ccd1cbe2d: shr    $0x9,%r10
+  3.24%    5.26%   ││││  0x00007f1ccd1cbe31: movabs $0x7f1ce048c000,%r11
+  0.05%    0.08%   ││││  0x00007f1ccd1cbe3b: mov    %r12b,(%r11,%r10,1)  ;*putfield lastReturned
+                   ││││                                                ; - java.util.LinkedList$ListItr::next@24 (line 892)
+                   ││││                                                ; - org.sample.lists.Lists::linkedList@20 (line 55)
+  0.34%    0.17%   ││││  0x00007f1ccd1cbe3f: mov    0xc(%r8),%r10d     ;*getfield item
+                   ││││                                                ; - java.util.LinkedList$ListItr::next@52 (line 895)
+                   ││││                                                ; - org.sample.lists.Lists::linkedList@20 (line 55)
+                   ││││                                                ; implicit exception: dispatches to 0x00007f1ccd1cbf39
+ 20.99%    7.19%   ││││  0x00007f1ccd1cbe43: mov    0x10(%r8),%r8d
+  7.10%    4.90%   ││││  0x00007f1ccd1cbe47: mov    %r8d,0x18(%rbp)    ;*putfield next
+                   ││││                                                ; - java.util.LinkedList$ListItr::next@35 (line 893)
+                   ││││                                                ; - org.sample.lists.Lists::linkedList@20 (line 55)
+  1.87%    2.01%   ││││  0x00007f1ccd1cbe4b: mov    %rbp,%r11
+  0.13%    0.11%   ││││  0x00007f1ccd1cbe4e: inc    %r9d
+  0.23%    0.16%   ││││  0x00007f1ccd1cbe51: mov    %r9d,0xc(%rbp)     ;*putfield nextIndex
+                   ││││                                                ; - java.util.LinkedList$ListItr::next@45 (line 894)
+                   ││││                                                ; - org.sample.lists.Lists::linkedList@20 (line 55)
+  1.99%    1.04%   ││││  0x00007f1ccd1cbe55: shr    $0x9,%r11
+  1.64%    1.99%   ││││  0x00007f1ccd1cbe59: movabs $0x7f1ce048c000,%r8
+  0.10%    0.16%   ││││  0x00007f1ccd1cbe63: mov    %r12b,(%r8,%r11,1)  ;*putfield next
+                   ││││                                                ; - java.util.LinkedList$ListItr::next@35 (line 893)
+                   ││││                                                ; - org.sample.lists.Lists::linkedList@20 (line 55)
+  0.20%    0.28%   ││││  0x00007f1ccd1cbe67: mov    0x8(%r10),%r11d    ; implicit exception: dispatches to 0x00007f1ccd1cbf49
+  4.87%    5.91%   ││││  0x00007f1ccd1cbe6b: cmp    $0x20002264,%r11d  ;   {metadata(&apos;java/lang/Integer&apos;)}
+  1.94%    2.73%   ││││  0x00007f1ccd1cbe72: jne    0x00007f1ccd1cbf11  ;*checkcast
+                   ││││                                                ; - org.sample.lists.Lists::linkedList@25 (line 55)
+  2.23%    2.57%   ││││  0x00007f1ccd1cbe78: mov    %rcx,(%rsp)        ;*invokeinterface next
+                   ││││                                                ; - org.sample.lists.Lists::linkedList@20 (line 55)
+  0.02%    0.05%   ││││  0x00007f1ccd1cbe7c: mov    %r10,%rdx          ;*checkcast
+                   ││││                                                ; - org.sample.lists.Lists::linkedList@25 (line 55)
+  1.35%    2.41%   ││││  0x00007f1ccd1cbe7f: mov    %rcx,%rsi
+  0.22%    0.25%   ││││  0x00007f1ccd1cbe82: nop
+  2.31%    2.45%   ││││  0x00007f1ccd1cbe83: callq  0x00007f1ccd045d60  ; OopMap{rbp=Oop [0]=Oop off=296}
+                   ││││                                                ;*invokevirtual consume
+                   ││││                                                ; - org.sample.lists.Lists::linkedList@31 (line 56)
+                   ││││                                                ;   {optimized virtual_call}
+  3.75%    4.98%   ││││  0x00007f1ccd1cbe88: mov    0x1c(%rbp),%r11d   ;*getfield this$0
+                   ││││                                                ; - java.util.LinkedList$ListItr::hasNext@5 (line 884)
+                   ││││                                                ; - org.sample.lists.Lists::linkedList@11 (line 55)
+  0.19%    0.23%   ││││  0x00007f1ccd1cbe8c: mov    0x10(%r11),%r8d    ; implicit exception: dispatches to 0x00007f1ccd1cbf5d
+  1.63%    2.69%   ││││  0x00007f1ccd1cbe90: mov    0xc(%rbp),%r9d     ;*getfield nextIndex
+                   ││││                                                ; - java.util.LinkedList$ListItr::hasNext@1 (line 884)
+                   ││││                                                ; - org.sample.lists.Lists::linkedList@11 (line 55)
+  0.08%    0.33%   ││││  0x00007f1ccd1cbe94: cmp    %r8d,%r9d
+  3.51%    5.71%   ││╰│  0x00007f1ccd1cbe97: jl     0x00007f1ccd1cbdf1  ;*ifeq
+                   ││ │                                                ; - org.sample.lists.Lists::linkedList@16 (line 55)
+                   ││ │  0x00007f1ccd1cbe9d: add    $0x30,%rsp
+                   ││ │  0x00007f1ccd1cbea1: pop    %rbp
+                   ││ │  0x00007f1ccd1cbea2: test   %eax,0x17269158(%rip)        # 0x00007f1ce4435000
+                   ││ │                                                ;   {poll_return}
+                   ││ │  0x00007f1ccd1cbea8: retq   
+                   │↘ │  0x00007f1ccd1cbea9: xor    %r10d,%r10d
+                   │  ╰  0x00007f1ccd1cbeac: jmpq   0x00007f1ccd1cbe19
+                   ↘     0x00007f1ccd1cbeb1: mov    $0xffffff65,%esi
+                         0x00007f1ccd1cbeb6: mov    %rcx,(%rsp)
+....................................................................................................
+ 75.97%   74.35%  <total for region 1>
+
+....[Hottest Region 2]..............................................................................
+ [0x7f1ccd1bbd60:0x7f1ccd1bbde5] in org.openjdk.jmh.infra.Blackhole::consume
+
+                     # parm0:    rdx:rdx   = &apos;java/lang/Object&apos;
+                     #           [sp+0x20]  (sp of caller)
+                     0x00007f1ccd1bbd60: mov    0x8(%rsi),%r10d
+                     0x00007f1ccd1bbd64: shl    $0x3,%r10
+                     0x00007f1ccd1bbd68: cmp    %r10,%rax
+                     0x00007f1ccd1bbd6b: jne    0x00007f1ccd045b60  ;   {runtime_call}
+                     0x00007f1ccd1bbd71: data16 xchg %ax,%ax
+                     0x00007f1ccd1bbd74: nopl   0x0(%rax,%rax,1)
+                     0x00007f1ccd1bbd7c: data16 data16 xchg %ax,%ax
+                   [Verified Entry Point]
+  7.22%    8.36%     0x00007f1ccd1bbd80: sub    $0x18,%rsp
+                     0x00007f1ccd1bbd87: mov    %rbp,0x10(%rsp)    ;*synchronization entry
+                                                                   ; - org.openjdk.jmh.infra.Blackhole::consume@-1 (line 316)
+  0.08%              0x00007f1ccd1bbd8c: mov    0xc4(%rsi),%r11d   ;*getfield tlrMask
+                                                                   ; - org.openjdk.jmh.infra.Blackhole::consume@1 (line 316)
+  3.61%    5.00%     0x00007f1ccd1bbd93: imul   $0x19660d,0xc0(%rsi),%r10d
+  0.14%    0.16%     0x00007f1ccd1bbd9e: add    $0x3c6ef35f,%r10d  ;*iadd
+                                                                   ; - org.openjdk.jmh.infra.Blackhole::consume@15 (line 317)
+  0.14%    0.24%     0x00007f1ccd1bbda5: mov    %r10d,0xc0(%rsi)   ;*putfield tlr
+                                                                   ; - org.openjdk.jmh.infra.Blackhole::consume@17 (line 317)
+  0.30%    0.34%     0x00007f1ccd1bbdac: and    %r11d,%r10d
+  3.43%    3.14%     0x00007f1ccd1bbdaf: test   %r10d,%r10d
+  0.34%    0.64%  ╭  0x00007f1ccd1bbdb2: je     0x00007f1ccd1bbdc0  ;*return
+                  │                                                ; - org.openjdk.jmh.infra.Blackhole::consume@41 (line 323)
+  0.47%    0.74%  │  0x00007f1ccd1bbdb4: add    $0x10,%rsp
+                  │  0x00007f1ccd1bbdb8: pop    %rbp
+  3.48%    3.43%  │  0x00007f1ccd1bbdb9: test   %eax,0x17279241(%rip)        # 0x00007f1ce4435000
+                  │                                                ;   {poll_return}
+  0.25%    0.44%  │  0x00007f1ccd1bbdbf: retq   
+                  ↘  0x00007f1ccd1bbdc0: shl    %r11d
+                     0x00007f1ccd1bbdc3: mov    %rsi,%r10
+                     0x00007f1ccd1bbdc6: inc    %r11d
+                     0x00007f1ccd1bbdc9: shr    $0x9,%r10
+                     0x00007f1ccd1bbdcd: mov    %rdx,%r8
+                     0x00007f1ccd1bbdd0: mov    %r8d,0xd4(%rsi)
+                     0x00007f1ccd1bbdd7: movabs $0x7f1ce048c000,%r8
+                     0x00007f1ccd1bbde1: mov    %r12b,(%r8,%r10,1)
+                     0x00007f1ccd1bbde5: mov    %r11d,0xc4(%rsi)
+....................................................................................................
+ 19.45%   22.49%  <total for region 2>
+
+....[Hottest Regions]...............................................................................
+ 75.97%   74.35%  [0x7f1ccd1cbdd9:0x7f1ccd1cbeb6] in org.sample.lists.Lists::linkedList
+ 19.45%   22.49%  [0x7f1ccd1bbd60:0x7f1ccd1bbde5] in org.openjdk.jmh.infra.Blackhole::consume
+  0.12%    0.05%  [0xffffffff810644aa:0xffffffff810644aa] in [unknown] ([unknown])
+  0.10%           [0x7f1ce315663f:0x7f1ce3156645] in defaultStream::write (libjvm.so)
+  0.07%    0.01%  [0xffffffff8120edda:0xffffffff8120edda] in [unknown] ([unknown])
+  0.07%    0.06%  [0xffffffff8122a782:0xffffffff8122a7a6] in [unknown] ([unknown])
+  0.07%    0.05%  [0xffffffff8182be35:0xffffffff8182be48] in [unknown] ([unknown])
+  0.07%           [0xffffffff8182ddbb:0xffffffff8182ddd6] in [unknown] ([unknown])
+  0.06%           [0x7f1ce3156602:0x7f1ce3156619] in defaultStream::write (libjvm.so)
+  0.06%    0.04%  [0x7f1ce330ce8e:0x7f1ce330ceb3] in xmlTextStream::write (libjvm.so)
+  0.06%    0.01%  [0x7f1ce3881743:0x7f1ce3881759] in _IO_fwrite (libc-2.23.so)
+  0.06%    0.02%  [0x7f1ce389c0a7:0x7f1ce389c0d6] in __strchr_sse2 (libc-2.23.so)
+  0.05%    0.02%  [0xffffffff8120c950:0xffffffff8120c986] in [unknown] ([unknown])
+  0.05%    0.01%  [0xffffffff8182beb0:0xffffffff8182beb0] in [unknown] ([unknown])
+  0.05%           [0xffffffff8182df50:0xffffffff8182df5c] in [unknown] ([unknown])
+  0.05%    0.05%  [0x7f1ce31cb63c:0x7f1ce31cb66f] in RelocIterator::initialize (libjvm.so)
+  0.04%           [0xffffffff8182a0e0:0xffffffff8182a0ec] in [unknown] ([unknown])
+  0.04%           [0xffffffff8182dd45:0xffffffff8182dd60] in [unknown] ([unknown])
+  0.04%           [0xffffffffc086fe23:0xffffffffc086fe23] in [unknown] ([unknown])
+  0.04%           [0x7f1ce2d20361:0x7f1ce2d20368] in is_error_reported (libjvm.so)
+  3.50%    2.82%  <...other 358 warm regions...>
+....................................................................................................
+100.00%   99.99%  <totals>
+
+....[Hottest Methods (after inlining)]..............................................................
+ 75.99%   74.35%  org.sample.lists.Lists::linkedList
+ 19.45%   22.49%  org.openjdk.jmh.infra.Blackhole::consume
+  2.30%    1.58%  [unknown] ([unknown])
+  0.17%    0.02%  defaultStream::write (libjvm.so)
+  0.17%    0.13%  [unknown] (hsdis-amd64.so)
+  0.16%    0.05%  _IO_fwrite (libc-2.23.so)
+  0.10%    0.12%  vfprintf (libc-2.23.so)
+  0.08%    0.06%  xmlTextStream::write (libjvm.so)
+  0.06%    0.05%  RelocIterator::initialize (libjvm.so)
+  0.06%    0.02%  __strchr_sse2 (libc-2.23.so)
+  0.05%    0.02%  _IO_str_init_static_internal (libc-2.23.so)
+  0.05%    0.05%  _IO_file_xsputn@@GLIBC_2.2.5 (libc-2.23.so)
+  0.05%           decode_env::handle_event (libjvm.so)
+  0.05%           <stub: invokevirtual  182 invokevirtual>
+  0.05%    0.01%  _IO_old_init (libc-2.23.so)
+  0.04%           is_error_reported (libjvm.so)
+  0.04%    0.13%  fileStream::write (libjvm.so)
+  0.04%    0.02%  _IO_fflush (libc-2.23.so)
+  0.04%    0.06%  _IO_default_xsputn (libc-2.23.so)
+  0.04%    0.01%  [unknown] (libpthread-2.23.so)
+  1.04%    0.39%  <...other 64 warm methods...>
+....................................................................................................
+100.00%   99.58%  <totals>
+
+....[Distribution by Area]..........................................................................
+ 95.60%   96.87%  <generated code>
+  2.30%    1.58%  <native code in ([unknown])>
+  1.09%    0.78%  <native code in (libjvm.so)>
+  0.72%    0.57%  <native code in (libc-2.23.so)>
+  0.19%    0.13%  <native code in (hsdis-amd64.so)>
+  0.10%    0.06%  <native code in (libpthread-2.23.so)>
+....................................................................................................
+100.00%   99.99%  <totals>
+
+
+
+# JMH 1.12 (released 188 days ago, please consider updating!)
+# VM version: JDK 1.8.0_101, VM 25.101-b13
+# VM invoker: /usr/lib/jvm/java-8-oracle/jre/bin/java
+# VM options: <none>
+# Warmup: 5 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.sample.lists.Lists.linkedListIteratorOnly
+
+# Run progress: 50.00% complete, ETA 00:00:16
+# Fork: 1 of 1
+# Preparing profilers: LinuxPerfAsmProfiler 
+# Profilers consume stdout and stderr from target VM, use -v EXTRA to copy to console
+# Warmup Iteration   1: 29.899 ns/op
+# Warmup Iteration   2: 16.804 ns/op
+# Warmup Iteration   3: 14.635 ns/op
+# Warmup Iteration   4: 14.429 ns/op
+# Warmup Iteration   5: 14.810 ns/op
+Iteration   1: 14.747 ns/op
+Iteration   2: 14.623 ns/op
+Iteration   3: 14.274 ns/op
+Iteration   4: 14.248 ns/op
+Iteration   5: 14.361 ns/op
+# Processing profiler results: LinuxPerfAsmProfiler 
+
+
+Result "linkedListIteratorOnly":
+  14.451 ±(99.9%) 0.857 ns/op [Average]
+  (min, avg, max) = (14.248, 14.451, 14.747), stdev = 0.223
+  CI (99.9%): [13.594, 15.307] (assumes normal distribution)
+
+Secondary result "·asm":
+PrintAssembly processed: 112294 total address lines.
+Perf output processed (skipped 5.351 seconds):
+ Column 1: cycles (8487 events)
+ Column 2: instructions (8360 events)
+
+Hottest code regions (>10.00% "cycles" events):
+....[Hottest Region 1]..............................................................................
+ [0x7f2d9d1c477c:0x7f2d9d1c48b3] in org.sample.lists.generated.Lists_linkedListIteratorOnly_jmhTest::linkedListIteratorOnly_avgt_jmhStub
+
+                      0x00007f2d9d1c477c: mov    (%rsp),%r9
+                      0x00007f2d9d1c4780: movzbl 0x94(%r9),%r11d    ;*getfield isDone
+                                                                    ; - org.sample.lists.generated.Lists_linkedListIteratorOnly_jmhTest::linkedListIteratorOnly_avgt_jmhStub@29 (line 199)
+                                                                    ; implicit exception: dispatches to 0x00007f2d9d1c4ad5
+                      0x00007f2d9d1c4788: test   %r11d,%r11d
+                      0x00007f2d9d1c478b: jne    0x00007f2d9d1c48d5  ;*ifeq
+                                                                    ; - org.sample.lists.generated.Lists_linkedListIteratorOnly_jmhTest::linkedListIteratorOnly_avgt_jmhStub@32 (line 199)
+                      0x00007f2d9d1c4791: mov    $0x1,%ebx
+                  ╭   0x00007f2d9d1c4796: jmpq   0x00007f2d9d1c4854
+                  │   0x00007f2d9d1c479b: nopl   0x0(%rax,%rax,1)
+  2.37%    1.29%  │↗  0x00007f2d9d1c47a0: mov    %r10,0x60(%r15)
+  0.18%    0.07%  ││  0x00007f2d9d1c47a4: prefetchnta 0x100(%r10)
+  0.48%    0.41%  ││  0x00007f2d9d1c47ac: mov    0x18(%rsp),%rdi
+  0.07%    0.05%  ││  0x00007f2d9d1c47b1: mov    0xa8(%rdi),%r10
+  2.45%    1.76%  ││  0x00007f2d9d1c47b8: mov    %r10,(%rax)
+  0.40%    0.39%  ││  0x00007f2d9d1c47bb: movl   $0x200116a3,0x8(%rax)  ;   {metadata(&apos;java/util/LinkedList$ListItr&apos;)}
+  1.80%    0.41%  ││  0x00007f2d9d1c47c2: mov    %r12d,0xc(%rax)
+  0.07%    0.01%  ││  0x00007f2d9d1c47c6: mov    %r12,0x10(%rax)
+  2.07%    2.00%  ││  0x00007f2d9d1c47ca: mov    %r12,0x18(%rax)    ;*new  ; - java.util.LinkedList::listIterator@5 (line 868)
+                  ││                                                ; - java.util.AbstractList::listIterator@2 (line 299)
+                  ││                                                ; - java.util.AbstractSequentialList::iterator@1 (line 239)
+                  ││                                                ; - org.sample.lists.Lists::linkedListIteratorOnly@4 (line 41)
+                  ││                                                ; - org.sample.lists.generated.Lists_linkedListIteratorOnly_jmhTest::linkedListIteratorOnly_avgt_jmhStub@16 (line 197)
+  0.31%    0.43%  ││  0x00007f2d9d1c47ce: mov    0xc(%rbp),%r10d    ;*getfield modCount
+                  ││                                                ; - java.util.LinkedList$ListItr::&lt;init&gt;@14 (line 875)
+                  ││                                                ; - java.util.LinkedList::listIterator@11 (line 868)
+                  ││                                                ; - java.util.AbstractList::listIterator@2 (line 299)
+                  ││                                                ; - java.util.AbstractSequentialList::iterator@1 (line 239)
+                  ││                                                ; - org.sample.lists.Lists::linkedListIteratorOnly@4 (line 41)
+                  ││                                                ; - org.sample.lists.generated.Lists_linkedListIteratorOnly_jmhTest::linkedListIteratorOnly_avgt_jmhStub@16 (line 197)
+  1.41%    0.85%  ││  0x00007f2d9d1c47d2: mov    %r10d,0x10(%rax)   ;*putfield expectedModCount
+                  ││                                                ; - java.util.LinkedList$ListItr::&lt;init&gt;@17 (line 875)
+                  ││                                                ; - java.util.LinkedList::listIterator@11 (line 868)
+                  ││                                                ; - java.util.AbstractList::listIterator@2 (line 299)
+                  ││                                                ; - java.util.AbstractSequentialList::iterator@1 (line 239)
+                  ││                                                ; - org.sample.lists.Lists::linkedListIteratorOnly@4 (line 41)
+                  ││                                                ; - org.sample.lists.generated.Lists_linkedListIteratorOnly_jmhTest::linkedListIteratorOnly_avgt_jmhStub@16 (line 197)
+  0.31%    0.32%  ││  0x00007f2d9d1c47d6: mov    %rbp,%r11
+  2.01%    1.69%  ││  0x00007f2d9d1c47d9: mov    %r11d,0x1c(%rax)   ;*putfield this$0
+                  ││                                                ; - java.util.LinkedList$ListItr::&lt;init&gt;@2 (line 877)
+                  ││                                                ; - java.util.LinkedList::listIterator@11 (line 868)
+                  ││                                                ; - java.util.AbstractList::listIterator@2 (line 299)
+                  ││                                                ; - java.util.AbstractSequentialList::iterator@1 (line 239)
+                  ││                                                ; - org.sample.lists.Lists::linkedListIteratorOnly@4 (line 41)
+                  ││                                                ; - org.sample.lists.generated.Lists_linkedListIteratorOnly_jmhTest::linkedListIteratorOnly_avgt_jmhStub@16 (line 197)
+  0.25%    0.30%  ││  0x00007f2d9d1c47dd: test   %r8d,%r8d
+  0.02%    0.02%  ││  0x00007f2d9d1c47e0: je     0x00007f2d9d1c4989  ;*if_icmpne
+                  ││                                                ; - java.util.LinkedList$ListItr::&lt;init&gt;@26 (line 879)
+                  ││                                                ; - java.util.LinkedList::listIterator@11 (line 868)
+                  ││                                                ; - java.util.AbstractList::listIterator@2 (line 299)
+                  ││                                                ; - java.util.AbstractSequentialList::iterator@1 (line 239)
+                  ││                                                ; - org.sample.lists.Lists::linkedListIteratorOnly@4 (line 41)
+                  ││                                                ; - org.sample.lists.generated.Lists_linkedListIteratorOnly_jmhTest::linkedListIteratorOnly_avgt_jmhStub@16 (line 197)
+  0.09%    0.13%  ││  0x00007f2d9d1c47e6: sar    %r8d               ;*ishr
+                  ││                                                ; - java.util.LinkedList::node@6 (line 569)
+                  ││                                                ; - java.util.LinkedList$ListItr::&lt;init&gt;@35 (line 879)
+                  ││                                                ; - java.util.LinkedList::listIterator@11 (line 868)
+                  ││                                                ; - java.util.AbstractList::listIterator@2 (line 299)
+                  ││                                                ; - java.util.AbstractSequentialList::iterator@1 (line 239)
+                  ││                                                ; - org.sample.lists.Lists::linkedListIteratorOnly@4 (line 41)
+                  ││                                                ; - org.sample.lists.generated.Lists_linkedListIteratorOnly_jmhTest::linkedListIteratorOnly_avgt_jmhStub@16 (line 197)
+  1.96%    1.38%  ││  0x00007f2d9d1c47e9: test   %r8d,%r8d
+  0.26%    0.31%  ││  0x00007f2d9d1c47ec: jle    0x00007f2d9d1c495d  ;*if_icmpge
+                  ││                                                ; - java.util.LinkedList::node@7 (line 569)
+                  ││                                                ; - java.util.LinkedList$ListItr::&lt;init&gt;@35 (line 879)
+                  ││                                                ; - java.util.LinkedList::listIterator@11 (line 868)
+                  ││                                                ; - java.util.AbstractList::listIterator@2 (line 299)
+                  ││                                                ; - java.util.AbstractSequentialList::iterator@1 (line 239)
+                  ││                                                ; - org.sample.lists.Lists::linkedListIteratorOnly@4 (line 41)
+                  ││                                                ; - org.sample.lists.generated.Lists_linkedListIteratorOnly_jmhTest::linkedListIteratorOnly_avgt_jmhStub@16 (line 197)
+  0.57%    0.08%  ││  0x00007f2d9d1c47f2: mov    %rbx,0x20(%rsp)
+  0.26%    0.17%  ││  0x00007f2d9d1c47f7: mov    %rdi,0x18(%rsp)
+  2.37%    1.60%  ││  0x00007f2d9d1c47fc: mov    %r9,(%rsp)
+  0.37%    0.31%  ││  0x00007f2d9d1c4800: mov    %rcx,0x10(%rsp)
+  0.57%    0.55%  ││  0x00007f2d9d1c4805: mov    %rax,%rdx          ;*areturn
+                  ││                                                ; - java.util.LinkedList::listIterator@14 (line 868)
+                  ││                                                ; - java.util.AbstractList::listIterator@2 (line 299)
+                  ││                                                ; - java.util.AbstractSequentialList::iterator@1 (line 239)
+                  ││                                                ; - org.sample.lists.Lists::linkedListIteratorOnly@4 (line 41)
+                  ││                                                ; - org.sample.lists.generated.Lists_linkedListIteratorOnly_jmhTest::linkedListIteratorOnly_avgt_jmhStub@16 (line 197)
+  0.15%    0.08%  ││  0x00007f2d9d1c4808: mov    0x14(%rbp),%r10d   ;*getfield first
+                  ││                                                ; - java.util.LinkedList::node@11 (line 570)
+                  ││                                                ; - java.util.LinkedList$ListItr::&lt;init&gt;@35 (line 879)
+                  ││                                                ; - java.util.LinkedList::listIterator@11 (line 868)
+                  ││                                                ; - java.util.AbstractList::listIterator@2 (line 299)
+                  ││                                                ; - java.util.AbstractSequentialList::iterator@1 (line 239)
+                  ││                                                ; - org.sample.lists.Lists::linkedListIteratorOnly@4 (line 41)
+                  ││                                                ; - org.sample.lists.generated.Lists_linkedListIteratorOnly_jmhTest::linkedListIteratorOnly_avgt_jmhStub@16 (line 197)
+  2.12%    2.52%  ││  0x00007f2d9d1c480c: mov    %r10d,0x18(%rax)
+  0.74%    0.49%  ││  0x00007f2d9d1c4810: mov    %rax,%r10
+  0.06%    0.04%  ││  0x00007f2d9d1c4813: shr    $0x9,%r10
+  0.13%    0.13%  ││  0x00007f2d9d1c4817: movabs $0x7f2d9c00e000,%r11
+  1.79%    1.85%  ││  0x00007f2d9d1c4821: mov    %r12b,(%r11,%r10,1)  ;*synchronization entry
+                  ││                                                ; - java.util.LinkedList::listIterator@-1 (line 867)
+                  ││                                                ; - java.util.AbstractList::listIterator@2 (line 299)
+                  ││                                                ; - java.util.AbstractSequentialList::iterator@1 (line 239)
+                  ││                                                ; - org.sample.lists.Lists::linkedListIteratorOnly@4 (line 41)
+                  ││                                                ; - org.sample.lists.generated.Lists_linkedListIteratorOnly_jmhTest::linkedListIteratorOnly_avgt_jmhStub@16 (line 197)
+  2.32%    2.79%  ││  0x00007f2d9d1c4825: mov    0x28(%rsp),%rsi
+  5.82%    9.55%  ││  0x00007f2d9d1c482a: nop
+  0.07%    0.11%  ││  0x00007f2d9d1c482b: callq  0x00007f2d9d045d60  ; OopMap{[0]=Oop [8]=Oop [16]=Oop [40]=Oop off=496}
+                  ││                                                ;*invokevirtual consume
+                  ││                                                ; - org.sample.lists.generated.Lists_linkedListIteratorOnly_jmhTest::linkedListIteratorOnly_avgt_jmhStub@19 (line 197)
+                  ││                                                ;   {optimized virtual_call}
+  2.45%    3.52%  ││  0x00007f2d9d1c4830: mov    (%rsp),%r9
+  0.11%    0.13%  ││  0x00007f2d9d1c4834: movzbl 0x94(%r9),%r10d    ;*getfield isDone
+                  ││                                                ; - org.sample.lists.generated.Lists_linkedListIteratorOnly_jmhTest::linkedListIteratorOnly_avgt_jmhStub@29 (line 199)
+  0.20%    0.10%  ││  0x00007f2d9d1c483c: mov    0x20(%rsp),%rbx
+  2.39%    2.26%  ││  0x00007f2d9d1c4841: add    $0x1,%rbx          ; OopMap{r9=Oop [8]=Oop [16]=Oop [40]=Oop off=517}
+                  ││                                                ;*ifeq
+                  ││                                                ; - org.sample.lists.generated.Lists_linkedListIteratorOnly_jmhTest::linkedListIteratorOnly_avgt_jmhStub@32 (line 199)
+  0.02%    0.02%  ││  0x00007f2d9d1c4845: test   %eax,0x15e9f7b5(%rip)        # 0x00007f2db3064000
+                  ││                                                ;   {poll}
+  0.01%           ││  0x00007f2d9d1c484b: test   %r10d,%r10d
+  0.02%    0.04%  ││  0x00007f2d9d1c484e: jne    0x00007f2d9d1c48da  ;*aload
+                  ││                                                ; - org.sample.lists.generated.Lists_linkedListIteratorOnly_jmhTest::linkedListIteratorOnly_avgt_jmhStub@13 (line 197)
+  2.62%    3.58%  ↘│  0x00007f2d9d1c4854: mov    0x10(%rsp),%rcx
+  0.11%    0.14%   │  0x00007f2d9d1c4859: mov    0x10(%rcx),%r10d   ;*getfield linkedList
+                   │                                                ; - org.sample.lists.Lists::linkedListIteratorOnly@1 (line 41)
+                   │                                                ; - org.sample.lists.generated.Lists_linkedListIteratorOnly_jmhTest::linkedListIteratorOnly_avgt_jmhStub@16 (line 197)
+  0.64%    0.92%   │  0x00007f2d9d1c485d: mov    0x8(%r10),%r11d    ; implicit exception: dispatches to 0x00007f2d9d1c4aa5
+  3.83%    4.14%   │  0x00007f2d9d1c4861: cmp    $0x200114ab,%r11d  ;   {metadata(&apos;java/util/LinkedList&apos;)}
+  2.23%    0.96%   │  0x00007f2d9d1c4868: jne    0x00007f2d9d1c4904
+  1.23%    0.90%   │  0x00007f2d9d1c486e: mov    %r10,%rbp          ;*invokeinterface iterator
+                   │                                                ; - org.sample.lists.Lists::linkedListIteratorOnly@4 (line 41)
+                   │                                                ; - org.sample.lists.generated.Lists_linkedListIteratorOnly_jmhTest::linkedListIteratorOnly_avgt_jmhStub@16 (line 197)
+                   │  0x00007f2d9d1c4871: mov    0x10(%rbp),%r8d    ;*getfield size
+                   │                                                ; - java.util.LinkedList::isPositionIndex@6 (line 541)
+                   │                                                ; - java.util.LinkedList::checkPositionIndex@2 (line 559)
+                   │                                                ; - java.util.LinkedList::listIterator@2 (line 867)
+                   │                                                ; - java.util.AbstractList::listIterator@2 (line 299)
+                   │                                                ; - java.util.AbstractSequentialList::iterator@1 (line 239)
+                   │                                                ; - org.sample.lists.Lists::linkedListIteratorOnly@4 (line 41)
+                   │                                                ; - org.sample.lists.generated.Lists_linkedListIteratorOnly_jmhTest::linkedListIteratorOnly_avgt_jmhStub@16 (line 197)
+  0.38%    0.42%   │  0x00007f2d9d1c4875: test   %r8d,%r8d
+  1.56%    1.21%   │  0x00007f2d9d1c4878: jl     0x00007f2d9d1c493d  ;*if_icmpgt
+                   │                                                ; - java.util.LinkedList::isPositionIndex@9 (line 541)
+                   │                                                ; - java.util.LinkedList::checkPositionIndex@2 (line 559)
+                   │                                                ; - java.util.LinkedList::listIterator@2 (line 867)
+                   │                                                ; - java.util.AbstractList::listIterator@2 (line 299)
+                   │                                                ; - java.util.AbstractSequentialList::iterator@1 (line 239)
+                   │                                                ; - org.sample.lists.Lists::linkedListIteratorOnly@4 (line 41)
+                   │                                                ; - org.sample.lists.generated.Lists_linkedListIteratorOnly_jmhTest::linkedListIteratorOnly_avgt_jmhStub@16 (line 197)
+  1.38%    1.47%   │  0x00007f2d9d1c487e: mov    0x60(%r15),%rax
+  0.04%    0.01%   │  0x00007f2d9d1c4882: mov    %rax,%r10
+                   │  0x00007f2d9d1c4885: add    $0x20,%r10
+  1.01%    0.08%   │  0x00007f2d9d1c4889: cmp    0x70(%r15),%r10
+  1.40%    1.09%   ╰  0x00007f2d9d1c488d: jb     0x00007f2d9d1c47a0
+                      0x00007f2d9d1c4893: mov    %r8d,0x30(%rsp)
+                      0x00007f2d9d1c4898: mov    %rbx,0x20(%rsp)
+                      0x00007f2d9d1c489d: mov    %r9,0x10(%rsp)
+                      0x00007f2d9d1c48a2: mov    %rcx,(%rsp)
+                      0x00007f2d9d1c48a6: movabs $0x10008b518,%rsi  ;   {metadata(&apos;java/util/LinkedList$ListItr&apos;)}
+                      0x00007f2d9d1c48b0: data16 xchg %ax,%ax
+                      0x00007f2d9d1c48b3: callq  0x00007f2d9d06c0a0  ; OopMap{rbp=Oop [0]=Oop [8]=Oop [16]=Oop [40]=Oop off=632}
+                                                                    ;*new  ; - java.util.LinkedList::listIterator@5 (line 868)
+                                                                    ; - java.util.AbstractList::listIterator@2 (line 299)
+                                                                    ; - java.util.AbstractSequentialList::iterator@1 (line 239)
+....................................................................................................
+ 55.46%   53.07%  <total for region 1>
+
+....[Hottest Region 2]..............................................................................
+ [0x7f2d9d1a6660:0x7f2d9d1a66e5] in org.openjdk.jmh.infra.Blackhole::consume
+
+                     # parm0:    rdx:rdx   = &apos;java/lang/Object&apos;
+                     #           [sp+0x20]  (sp of caller)
+                     0x00007f2d9d1a6660: mov    0x8(%rsi),%r10d
+                     0x00007f2d9d1a6664: shl    $0x3,%r10
+                     0x00007f2d9d1a6668: cmp    %r10,%rax
+                     0x00007f2d9d1a666b: jne    0x00007f2d9d045b60  ;   {runtime_call}
+                     0x00007f2d9d1a6671: data16 xchg %ax,%ax
+                     0x00007f2d9d1a6674: nopl   0x0(%rax,%rax,1)
+                     0x00007f2d9d1a667c: data16 data16 xchg %ax,%ax
+                   [Verified Entry Point]
+  5.68%    8.29%     0x00007f2d9d1a6680: sub    $0x18,%rsp
+  0.01%              0x00007f2d9d1a6687: mov    %rbp,0x10(%rsp)    ;*synchronization entry
+                                                                   ; - org.openjdk.jmh.infra.Blackhole::consume@-1 (line 316)
+  0.06%    0.13%     0x00007f2d9d1a668c: mov    0xc4(%rsi),%r11d   ;*getfield tlrMask
+                                                                   ; - org.openjdk.jmh.infra.Blackhole::consume@1 (line 316)
+  6.15%    9.25%     0x00007f2d9d1a6693: imul   $0x19660d,0xc0(%rsi),%r10d
+  5.42%    7.49%     0x00007f2d9d1a669e: add    $0x3c6ef35f,%r10d  ;*iadd
+                                                                   ; - org.openjdk.jmh.infra.Blackhole::consume@15 (line 317)
+  1.61%    0.61%     0x00007f2d9d1a66a5: mov    %r10d,0xc0(%rsi)   ;*putfield tlr
+                                                                   ; - org.openjdk.jmh.infra.Blackhole::consume@17 (line 317)
+  1.72%    0.72%     0x00007f2d9d1a66ac: and    %r11d,%r10d
+  1.08%    1.81%     0x00007f2d9d1a66af: test   %r10d,%r10d
+  1.99%    1.73%  ╭  0x00007f2d9d1a66b2: je     0x00007f2d9d1a66c0  ;*return
+                  │                                                ; - org.openjdk.jmh.infra.Blackhole::consume@41 (line 323)
+  2.44%    1.81%  │  0x00007f2d9d1a66b4: add    $0x10,%rsp
+           0.01%  │  0x00007f2d9d1a66b8: pop    %rbp
+  0.66%    0.68%  │  0x00007f2d9d1a66b9: test   %eax,0x15ebd941(%rip)        # 0x00007f2db3064000
+                  │                                                ;   {poll_return}
+  0.12%    0.14%  │  0x00007f2d9d1a66bf: retq   
+                  ↘  0x00007f2d9d1a66c0: shl    %r11d
+                     0x00007f2d9d1a66c3: mov    %rsi,%r10
+                     0x00007f2d9d1a66c6: inc    %r11d
+                     0x00007f2d9d1a66c9: shr    $0x9,%r10
+                     0x00007f2d9d1a66cd: mov    %rdx,%r8
+                     0x00007f2d9d1a66d0: mov    %r8d,0xd4(%rsi)
+                     0x00007f2d9d1a66d7: movabs $0x7f2d9c00e000,%r8
+                     0x00007f2d9d1a66e1: mov    %r12b,(%r8,%r10,1)
+                     0x00007f2d9d1a66e5: mov    %r11d,0xc4(%rsi)
+....................................................................................................
+ 26.95%   32.67%  <total for region 2>
+
+....[Hottest Regions]...............................................................................
+ 55.46%   53.07%  [0x7f2d9d1c477c:0x7f2d9d1c48b3] in org.sample.lists.generated.Lists_linkedListIteratorOnly_jmhTest::linkedListIteratorOnly_avgt_jmhStub
+ 26.95%   32.67%  [0x7f2d9d1a6660:0x7f2d9d1a66e5] in org.openjdk.jmh.infra.Blackhole::consume
+  9.27%    9.29%  [0x7f2d9d1c1eab:0x7f2d9d1c1ff9] in org.sample.lists.generated.Lists_linkedListIteratorOnly_jmhTest::linkedListIteratorOnly_avgt_jmhStub
+  0.24%    0.20%  [0x7f2db1e82400:0x7f2db1e82415] in StringTable::unlink_or_oops_do (libjvm.so)
+  0.18%    0.14%  [0xffffffff810644aa:0xffffffff810644aa] in [unknown] ([unknown])
+  0.16%    0.02%  [0x7f2db1c4fda0:0x7f2db1c4fda9] in SpinPause (libjvm.so)
+  0.14%    0.04%  [0x7f2db1de3eb0:0x7f2db1de3ec6] in PSScavengeKlassClosure::do_klass (libjvm.so)
+  0.12%    0.04%  [0x7f2db1d855e0:0x7f2db1d8566d] in defaultStream::write (libjvm.so)
+  0.12%    0.29%  [0x7f2db1dfa613:0x7f2db1dfa674] in RelocIterator::initialize (libjvm.so)
+  0.09%    0.10%  [0xffffffff8120d30a:0xffffffff8120d3a6] in [unknown] ([unknown])
+  0.09%    0.06%  [0x7f2db24cccf0:0x7f2db24ccd2e] in strlen (libc-2.23.so)
+  0.08%           [0xffffffff8182df50:0xffffffff8182df53] in [unknown] ([unknown])
+  0.08%           [0x7f2db1aa84e7:0x7f2db1aa84ea] in CollectedHeap::common_mem_allocate_init (libjvm.so)
+  0.08%    0.08%  [0x7f2db1d81250:0x7f2db1d81265] in outputStream::update_position (libjvm.so)
+  0.07%           [0xffffffff810b53ed:0xffffffff810b53fd] in [unknown] ([unknown])
+  0.07%    0.01%  [0xffffffff8120c9a0:0xffffffff8120c9c7] in [unknown] ([unknown])
+  0.07%    0.02%  [0xffffffff813fe0fc:0xffffffff813fe103] in [unknown] ([unknown])
+  0.07%    0.05%  [0xffffffff8182ddc5:0xffffffff8182ddde] in [unknown] ([unknown])
+  0.07%    0.05%  [0x7f2db1d83eb1:0x7f2db1d83f0f] in fileStream::write (libjvm.so)
+  0.07%    0.01%  [0x7f2db1e92c20:0x7f2db1e92c28] in ParallelTaskTerminator::offer_termination (libjvm.so)
+  6.49%    3.85%  <...other 565 warm regions...>
+....................................................................................................
+ 99.99%  100.00%  <totals>
+
+....[Hottest Methods (after inlining)]..............................................................
+ 64.73%   62.37%  org.sample.lists.generated.Lists_linkedListIteratorOnly_jmhTest::linkedListIteratorOnly_avgt_jmhStub
+ 26.95%   32.67%  org.openjdk.jmh.infra.Blackhole::consume
+  3.62%    2.12%  [unknown] ([unknown])
+  0.32%    0.13%  [unknown] (hsdis-amd64.so)
+  0.29%    0.22%  StringTable::unlink_or_oops_do (libjvm.so)
+  0.28%    0.14%  vfprintf (libc-2.23.so)
+  0.16%    0.02%  SpinPause (libjvm.so)
+  0.15%    0.17%  _IO_fwrite (libc-2.23.so)
+  0.14%    0.30%  RelocIterator::initialize (libjvm.so)
+  0.14%    0.04%  PSScavengeKlassClosure::do_klass (libjvm.so)
+  0.13%    0.04%  defaultStream::write (libjvm.so)
+  0.13%    0.12%  xmlTextStream::write (libjvm.so)
+  0.11%    0.08%  CardTableExtension::scavenge_contents_parallel (libjvm.so)
+  0.09%    0.06%  strlen (libc-2.23.so)
+  0.09%    0.08%  outputStream::update_position (libjvm.so)
+  0.09%    0.06%  fileStream::write (libjvm.so)
+  0.08%    0.05%  __GI___mempcpy (libc-2.23.so)
+  0.08%           CollectedHeap::common_mem_allocate_init (libjvm.so)
+  0.07%    0.01%  ParallelTaskTerminator::offer_termination (libjvm.so)
+  0.07%           CollectedHeap::fill_with_object (libjvm.so)
+  2.24%    0.79%  <...other 141 warm methods...>
+....................................................................................................
+ 99.99%   99.46%  <totals>
+
+....[Distribution by Area]..........................................................................
+ 91.80%   95.05%  <generated code>
+  3.62%    2.12%  <native code in ([unknown])>
+  2.99%    1.76%  <native code in (libjvm.so)>
+  1.00%    0.86%  <native code in (libc-2.23.so)>
+  0.37%    0.14%  <native code in (hsdis-amd64.so)>
+  0.20%    0.07%  <native code in (libpthread-2.23.so)>
+  0.01%           <native code in ([vdso])>
+....................................................................................................
+ 99.99%  100.00%  <totals>
+
+
+
+# Run complete. Total time: 00:00:32
+
+Benchmark                          Mode  Cnt   Score   Error  Units
+Lists.linkedList                   avgt    5  11.192 ± 0.330  ns/op
+Lists.linkedList:·asm              avgt          NaN            ---
+Lists.linkedListIteratorOnly       avgt    5  14.451 ± 0.857  ns/op
+Lists.linkedListIteratorOnly:·asm  avgt          NaN            ---
+
+
+$ java -jar target/benchmarks.jar linkedList -wi 5 -i 5 -f 1 -prof perf >>linkedList.log 2>&1
+# JMH 1.12 (released 188 days ago, please consider updating!)
+# VM version: JDK 1.8.0_101, VM 25.101-b13
+# VM invoker: /usr/lib/jvm/java-8-oracle/jre/bin/java
+# VM options: <none>
+# Warmup: 5 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.sample.lists.Lists.linkedList
+
+# Run progress: 0.00% complete, ETA 00:00:20
+# Fork: 1 of 1
+# Preparing profilers: LinuxPerfProfiler 
+# Profilers consume stderr from target VM, use -v EXTRA to copy to console
+# Warmup Iteration   1: 11.446 ns/op
+# Warmup Iteration   2: 9.238 ns/op
+# Warmup Iteration   3: 9.189 ns/op
+# Warmup Iteration   4: 9.117 ns/op
+# Warmup Iteration   5: 9.173 ns/op
+Iteration   1: 9.195 ns/op
+Iteration   2: 9.544 ns/op
+Iteration   3: 9.489 ns/op
+Iteration   4: 9.220 ns/op
+Iteration   5: 9.236 ns/op
+# Processing profiler results: LinuxPerfProfiler 
+
+
+Result "linkedList":
+  9.337 ±(99.9%) 0.638 ns/op [Average]
+  (min, avg, max) = (9.195, 9.337, 9.544), stdev = 0.166
+  CI (99.9%): [8.699, 9.975] (assumes normal distribution)
+
+Secondary result "·cpi":
+Perf stats:
+--------------------------------------------------
+
+       4584,413829      task-clock (msec)         #    0,433 CPUs utilized          
+               227      context-switches          #    0,050 K/sec                  
+                15      cpu-migrations            #    0,003 K/sec                  
+               113      page-faults               #    0,025 K/sec                  
+    10.618.180.533      cycles                    #    2,316 GHz                      (13,43%)
+   <not supported>      stalled-cycles-frontend  
+   <not supported>      stalled-cycles-backend   
+    25.160.574.912      instructions              #    2,37  insns per cycle          (20,27%)
+     3.872.146.133      branches                  #  844,633 M/sec                    (20,39%)
+         1.606.419      branch-misses             #    0,04% of all branches          (20,56%)
+     7.231.271.826      L1-dcache-loads           # 1577,360 M/sec                    (14,62%)
+       257.929.311      L1-dcache-load-misses     #    3,57% of all L1-dcache hits    (19,64%)
+       210.737.990      LLC-loads                 #   45,968 M/sec                    (19,54%)
+         1.522.595      LLC-load-misses           #    0,04% of all LL-cache hits     (19,58%)
+     7.206.845.884      L1-icache-loads           # 1572,032 M/sec                    (19,54%)
+           381.106      L1-icache-load-misses     #    0,083 M/sec                    (19,47%)
+     5.373.311.259      dTLB-loads                # 1172,083 M/sec                    (19,43%)
+         3.492.924      dTLB-load-misses          #    0,07% of all dTLB cache hits   (19,40%)
+    17.548.880.148      iTLB-loads                # 3827,944 M/sec                    (29,03%)
+               791      iTLB-load-misses          #    0,00% of all iTLB cache hits   (28,95%)
+       199.984.517      L1-dcache-prefetches      #   43,623 M/sec                    (28,88%)
+   <not supported>      L1-dcache-prefetch-misses
+
+      10,591345445 seconds time elapsed
+
+
+
+# JMH 1.12 (released 188 days ago, please consider updating!)
+# VM version: JDK 1.8.0_101, VM 25.101-b13
+# VM invoker: /usr/lib/jvm/java-8-oracle/jre/bin/java
+# VM options: <none>
+# Warmup: 5 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.sample.lists.Lists.linkedListIteratorOnly
+
+# Run progress: 50.00% complete, ETA 00:00:10
+# Fork: 1 of 1
+# Preparing profilers: LinuxPerfProfiler 
+# Profilers consume stderr from target VM, use -v EXTRA to copy to console
+# Warmup Iteration   1: 21.608 ns/op
+# Warmup Iteration   2: 14.367 ns/op
+# Warmup Iteration   3: 14.424 ns/op
+# Warmup Iteration   4: 14.304 ns/op
+# Warmup Iteration   5: 14.300 ns/op
+Iteration   1: 14.283 ns/op
+Iteration   2: 14.478 ns/op
+Iteration   3: 14.266 ns/op
+Iteration   4: 14.541 ns/op
+Iteration   5: 14.506 ns/op
+# Processing profiler results: LinuxPerfProfiler 
+
+
+Result "linkedListIteratorOnly":
+  14.415 ±(99.9%) 0.501 ns/op [Average]
+  (min, avg, max) = (14.266, 14.415, 14.541), stdev = 0.130
+  CI (99.9%): [13.914, 14.916] (assumes normal distribution)
+
+Secondary result "·cpi":
+Perf stats:
+--------------------------------------------------
+
+       4534,365921      task-clock (msec)         #    0,432 CPUs utilized          
+               700      context-switches          #    0,154 K/sec                  
+               253      cpu-migrations            #    0,056 K/sec                  
+               244      page-faults               #    0,054 K/sec                  
+    10.284.415.802      cycles                    #    2,268 GHz                      (13,74%)
+   <not supported>      stalled-cycles-frontend  
+   <not supported>      stalled-cycles-backend   
+    19.602.811.243      instructions              #    1,91  insns per cycle          (20,96%)
+     2.702.952.127      branches                  #  596,104 M/sec                    (21,40%)
+         1.823.674      branch-misses             #    0,07% of all branches          (21,10%)
+     4.922.850.734      L1-dcache-loads           # 1085,676 M/sec                    (18,73%)
+        13.219.283      L1-dcache-load-misses     #    0,27% of all L1-dcache hits    (18,80%)
+       114.921.683      LLC-loads                 #   25,345 M/sec                    (18,66%)
+         7.191.098      LLC-load-misses           #    0,25% of all LL-cache hits     (24,20%)
+     5.544.288.162      L1-icache-loads           # 1222,726 M/sec                    (24,86%)
+           267.417      L1-icache-load-misses     #    0,059 M/sec                    (24,55%)
+     3.669.657.214      dTLB-loads                #  809,299 M/sec                    (24,86%)
+         1.466.972      dTLB-load-misses          #    0,04% of all dTLB cache hits   (25,06%)
+    10.999.223.017      iTLB-loads                # 2425,747 M/sec                    (36,84%)
+            64.450      iTLB-load-misses          #    0,00% of all iTLB cache hits   (36,40%)
+        80.261.636      L1-dcache-prefetches      #   17,701 M/sec                    (36,14%)
+   <not supported>      L1-dcache-prefetch-misses
+
+      10,505531442 seconds time elapsed
+
+
+
+# Run complete. Total time: 00:00:21
+
+Benchmark                          Mode  Cnt   Score   Error  Units
+Lists.linkedList                   avgt    5   9.337 ± 0.638  ns/op
+Lists.linkedList:·cpi              avgt        0.400            CPI
+Lists.linkedListIteratorOnly       avgt    5  14.415 ± 0.501  ns/op
+Lists.linkedListIteratorOnly:·cpi  avgt        0.526            CPI
