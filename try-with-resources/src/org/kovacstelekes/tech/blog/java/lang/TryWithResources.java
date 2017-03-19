@@ -46,7 +46,6 @@ public class TryWithResources {
     private static String getStacktrace(Exception e) {
         StringWriter stringWriter = new StringWriter();
         e.printStackTrace(new PrintWriter(stringWriter));
-        String stacktrace = stringWriter.toString();
-        return stacktrace;
+        return stringWriter.toString();
     }
 }
